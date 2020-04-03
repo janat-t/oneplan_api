@@ -36,19 +36,16 @@ Load_plan.loadPlanId = (id, result) => {
 };
 
 Load_plan.loadStartDay = (id, result) => {
-  sql.query(
-    `SELECT * FROM plan_startday WHERE plan_id = ${id} ORDER BY day`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      console.log("found plan_startday: ", res);
-      result(null, res);
+  sql.query(`SELECT * FROM plan_startday WHERE plan_id = ${id} ORDER BY day`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
     }
-  );
+
+    console.log("found plan_startday: ", res);
+    result(null, res);
+  });
 };
 
 Load_plan.loadDetailId = (id, result) => {

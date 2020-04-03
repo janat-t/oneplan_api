@@ -8,16 +8,15 @@ exports.create = (req, res) => {
   }
 
   const plan_startday = new Plan_startday({
-	plan_id: req.body.plan_id,
-	day: req.body.day,
-	start_day: req.body.start_day
+    plan_id: req.body.plan_id,
+    day: req.body.day,
+    start_day: req.body.start_day
   });
 
   Plan_startday.create(plan_startday, (err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the plan_startday."
+        message: err.message || "Some error occurred while creating the plan_startday."
       });
     else res.send(data);
   });
@@ -51,26 +50,27 @@ exports.duplicate = (req, res) => {
           message: "Error retrieving plan_startday with plan_id " + req.params.planId
         });
       }
-    } 
-	else {
-		let array = [];
-		for(let i=0;i<data.length;i++){
-			const plan_startday = new Plan_startday({
-				plan_id: req.params.newPlanId,
-				day: data[i].day,
-				start_day: data[i].start_day
-			});
-			Plan_startday.create(plan_startday, (err, data2) => {
-				if (err)
-				res.status(500).send({
-					message:
-					err.message || "Some error occurred while duplicating plan_startday with plan_id." + req.params.planId
-				});
-				else array.concat(data2);
-			});
-		}
-		res.send(array);
-	}
+    } else {
+      let array = [];
+      for (let i = 0; i < data.length; i++) {
+        const plan_startday = new Plan_startday({
+          plan_id: req.params.newPlanId,
+          day: data[i].day,
+          start_day: data[i].start_day
+        });
+        Plan_startday.create(plan_startday, (err, data2) => {
+          if (err)
+            res.status(500).send({
+              message:
+                err.message ||
+                "Some error occurred while duplicating plan_startday with plan_id." +
+                  req.params.planId
+            });
+          else array.concat(data2);
+        });
+      }
+      res.send(array);
+    }
   });
 };
 
@@ -86,7 +86,10 @@ exports.deletePlanIdAll = (req, res) => {
           message: "Could not delete plan_startday with plan_id " + req.params.planId
         });
       }
-    } else res.send({ message: `Plan_startday with plan_id ${req.params.planId} was deleted successfully!` });
+    } else
+      res.send({
+        message: `Plan_startday with plan_id ${req.params.planId} was deleted successfully!`
+      });
   });
 };
 
@@ -102,7 +105,10 @@ exports.deletePlanIdOne = (req, res) => {
           message: `Could not delete plan_startday with plan_id ${req.params.planId} day ${req.params.day}.`
         });
       }
-    } else res.send({ message: `Plan_id ${req.params.planId} day ${req.params.day} was deleted successfully!` });
+    } else
+      res.send({
+        message: `Plan_id ${req.params.planId} day ${req.params.day} was deleted successfully!`
+      });
   });
 };
 
@@ -114,7 +120,8 @@ exports.updateOne = (req, res) => {
   }
 
   Plan_startday.updateByIdOne(
-    req.params.planId, req.params.day,
+    req.params.planId,
+    req.params.day,
     new Plan_startday(req.body),
     (err, data) => {
       if (err) {

@@ -5,7 +5,7 @@ const Attraction = function(attraction) {
   this.attraction_type = attraction.attraction_type;
   this.open_time = attraction.open_time;
   this.close_time = attraction.close_time;
-  this.description = attraction.description;
+  this.attraction_description = attraction.attraction_description;
   this.city_id = attraction.city_id;
 };
 
@@ -91,9 +91,17 @@ Attraction.getAll = result => {
 
 Attraction.updateById = (id, attraction, result) => {
   sql.query(
-    "UPDATE attraction SET attraction_name = ?, attraction_type = ?, open_time = ?, close_time = ?, description = ?, city_id = ? WHERE attraction_id = ?",
-    [attraction.attraction_name, attraction.attraction_type, attraction.open_time, attraction.close_time, attraction.description, attraction.city_id, id],
-	(err, res) => {
+    "UPDATE attraction SET attraction_name = ?, attraction_type = ?, open_time = ?, close_time = ?, attraction_description = ?, city_id = ? WHERE attraction_id = ?",
+    [
+      attraction.attraction_name,
+      attraction.attraction_type,
+      attraction.open_time,
+      attraction.close_time,
+      attraction.attraction_description,
+      attraction.city_id,
+      id
+    ],
+    (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);

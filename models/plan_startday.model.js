@@ -77,7 +77,7 @@ Plan_startday.updateByIdOne = (id, day, plan_startday, result) => {
   sql.query(
     "UPDATE plan_startday SET plan_id = ?, day = ?, start_day = ? WHERE plan_id = ? AND day = ?",
     [plan_startday.plan_id, plan_startday.day, plan_startday.start_day, id, day],
-	(err, res) => {
+    (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);

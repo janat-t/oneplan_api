@@ -21,9 +21,7 @@ exports.loadAllId = (req, res) => {
             });
           } else {
             res.status(500).send({
-              message:
-                "Error retrieving startday of plan with plan_id " +
-                req.params.planId
+              message: "Error retrieving startday of plan with plan_id " + req.params.planId
             });
           }
         } else {
@@ -35,9 +33,7 @@ exports.loadAllId = (req, res) => {
                 });
               } else {
                 res.status(500).send({
-                  message:
-                    "Error retrieving detail of plan with plan_id " +
-                    req.params.planId
+                  message: "Error retrieving detail of plan with plan_id " + req.params.planId
                 });
               }
             } else

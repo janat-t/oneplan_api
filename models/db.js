@@ -10,7 +10,8 @@ let pool = mysql.createPool({
 });
 
 pool.getConnection(function(err, connection) {
-	if (err) throw err; // not connected!
+	if (err) throw err;
+	// not connected!
 	else {
 		console.log("Successfully connected to the database.");
 		connection.release();

@@ -9,15 +9,14 @@ exports.create = (req, res) => {
   }
 
   const country = new Country({
-	country_name: req.body.country_name,
-	continent: req.body.continent,
+    country_name: req.body.country_name,
+    continent: req.body.continent
   });
 
   Country.create(country, (err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the country."
+        message: err.message || "Some error occurred while creating the country."
       });
     else res.send(data);
   });
@@ -27,8 +26,7 @@ exports.findAll = (req, res) => {
   Country.getAll((err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving countries."
+        message: err.message || "Some error occurred while retrieving countries."
       });
     else res.send(data);
   });
@@ -46,6 +44,9 @@ exports.delete = (req, res) => {
           message: "Could not delete the country with country_id " + req.params.countryId
         });
       }
-    } else res.send({ message: `The country with country_id ${req.params.countryId} was deleted successfully!` });
+    } else
+      res.send({
+        message: `The country with country_id ${req.params.countryId} was deleted successfully!`
+      });
   });
 };

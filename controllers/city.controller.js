@@ -8,17 +8,16 @@ exports.create = (req, res) => {
   }
 
   const city = new City({
-	city_name: req.body.city_name,
-	prefecture: req.body.prefecture,
-	region: req.body.region,
-	country_id: req.body.country_id,
+    city_name: req.body.city_name,
+    prefecture: req.body.prefecture,
+    region: req.body.region,
+    country_id: req.body.country_id
   });
 
   City.create(city, (err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the city."
+        message: err.message || "Some error occurred while creating the city."
       });
     else res.send(data);
   });
@@ -28,8 +27,7 @@ exports.findAll = (req, res) => {
   City.getAll((err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving cities."
+        message: err.message || "Some error occurred while retrieving cities."
       });
     else res.send(data);
   });
@@ -111,6 +109,7 @@ exports.delete = (req, res) => {
           message: "Could not delete the city with city_id " + req.params.cityId
         });
       }
-    } else res.send({ message: `The city with city_id ${req.params.cityId} was deleted successfully!` });
+    } else
+      res.send({ message: `The city with city_id ${req.params.cityId} was deleted successfully!` });
   });
 };
