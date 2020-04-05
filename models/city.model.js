@@ -2,7 +2,8 @@ const sql = require("./db.js");
 
 const City = function(city) {
   this.city_id = city.city_id;
-  this.city_name = city.city_name;
+  this.ward = city.ward;
+  this.city = city.city;
   this.prefecture = city.prefecture;
   this.region = city.region;
   this.country_id = city.country_id;
