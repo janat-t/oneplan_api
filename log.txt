@@ -1,5 +1,6 @@
-27 Feb 2020
-- Added column "available" in the table "plan_overview"
-- Added column "original_id" in the table "plan_overview"
-- Remove column "user_id" in the table "plan_detail"
-- Updated API for table "plan_overview", "plan_detail", and "plan_startday"
+5 April 2020
+- Added column "description" in the table "plan_detail"
+- Added column "attraction_name_thai" in the table "attraction"
+- Added table "image"
+- Change address system in the table "city"
+- Updated API for table "plan_detail" and "image"
