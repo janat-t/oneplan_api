@@ -7,18 +7,20 @@ exports.create = (req, res) => {
   }
 
   const attraction = new Attraction({
-    attraction_name: req.body.attraction_name,
-    attraction_type: req.body.attraction_type,
-    open_time: req.body.open_time,
-    close_time: req.body.close_time,
-    attraction_description: req.body.attraction_description,
-    city_id: req.body.city_id
+	attraction_name: req.body.attraction_name,
+	attraction_name_thai: req.body.attraction_name_thai,
+	attraction_type: req.body.attraction_type,
+	open_time: req.body.open_time,
+	close_time: req.body.close_time,
+	description: req.body.description,
+	city_id: req.body.city_id
   });
 
   Attraction.create(attraction, (err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the attraction."
+        message:
+          err.message || "Some error occurred while creating the attraction."
       });
     else res.send(data);
   });
@@ -76,7 +78,8 @@ exports.findAll = (req, res) => {
   Attraction.getAll((err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving attraction."
+        message:
+          err.message || "Some error occurred while retrieving attraction."
       });
     else res.send(data);
   });
@@ -89,19 +92,23 @@ exports.update = (req, res) => {
     });
   }
 
-  Attraction.updateById(req.params.attractionId, new Attraction(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found the attraction with attraction_id ${req.params.attractionId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error updating the attraction with attraction_id " + req.params.attractionId
-        });
-      }
-    } else res.send(data);
-  });
+  Attraction.updateById(
+    req.params.attractionId,
+    new Attraction(req.body),
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found the attraction with attraction_id ${req.params.attractionId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating the attraction with attraction_id " + req.params.attractionId
+          });
+        }
+      } else res.send(data);
+    }
+  );
 };
 
 exports.delete = (req, res) => {
@@ -116,9 +123,6 @@ exports.delete = (req, res) => {
           message: "Could not delete the attraction with attraction_id " + req.params.attractionId
         });
       }
-    } else
-      res.send({
-        message: `The attraction with attraction_id ${req.params.attractionId} was deleted successfully!`
-      });
+    } else res.send({ message: `The attraction with attraction_id ${req.params.attractionId} was deleted successfully!` });
   });
 };
