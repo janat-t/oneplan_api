@@ -1,5 +1,7 @@
 const express = require("express");
-
+const fs = require("fs");
+const http = require('http');
+const https = require('https');
 const app = express();
 var cors = require("cors");
 
@@ -22,7 +24,22 @@ require("./routes/transport.routes.js")(app);
 require("./routes/load_plan.routes.js")(app);
 require("./routes/image.routes.js")(app);
 
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/api.oneplan.in.th/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/api.oneplan.in.th/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/api.oneplan.in.th/chain.pem', 'utf8');
+const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca
+};
+
 // set port, listen for requests
-app.listen(3030, () => {
-	console.log("Server is running on port 3030.");
+
+https.createServer(credentials, app).listen(443, () => {
+    console.log('HTTPS Server running on port 443');
 });
+
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
