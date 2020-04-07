@@ -1,0 +1,16 @@
+7 April 2020
+1. Table "attraction"
+- Changed structure
+- Added function "findWard"
+- Edited function "findCity"
+2. Table "city"
+- Changed structure
+- Changed API to version 1.2.0
+3. Table "ward"
+- Added table
+- Added function "create", "findAll", "findId", and "delete"
+4. Table "plan_location"
+- Added table
+- Added function "create", "duplicate", "findPlanId", "findCityId", "deletePlanId", and "deleteCityId
+5. Model "load_plan"
+- Modified function "loadAllId"
