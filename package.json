@@ -4,6 +4,7 @@
   "description": "Node.js REST API",
   "main": "server.js",
   "scripts": {
+    "startDev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,5 +19,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
