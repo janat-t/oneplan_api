@@ -163,7 +163,7 @@ exports.duplicate = (req, res) => {
         duration: data[0].duration,
         plan_style: data[0].plan_style,
         plan_description: data[0].plan_description,
-        original_id: data[0].original_id,
+        original_id: req.params.planId,
         available: data[0].available,
         star_rating: data[0].star_rating
       });
