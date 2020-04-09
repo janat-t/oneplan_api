@@ -22,7 +22,7 @@ City.create = (newCity, result) => {
 };
 
 City.getAll = result => {
-  sql.query("SELECT * FROM city", (err, res) => {
+  sql.query("SELECT * FROM city ORDER BY city_name ASC", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -53,7 +53,7 @@ City.findById = (id, result) => {
 };
 
 City.findByPrefecture = (prefecture, result) => {
-  sql.query(`SELECT * FROM city WHERE prefecture = "${prefecture}"`, (err, res) => {
+  sql.query(`SELECT * FROM city WHERE prefecture = "${prefecture}" ORDER BY city_name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -71,7 +71,7 @@ City.findByPrefecture = (prefecture, result) => {
 };
 
 City.findByRegion = (region, result) => {
-  sql.query(`SELECT * FROM city WHERE region = "${region}"`, (err, res) => {
+  sql.query(`SELECT * FROM city WHERE region = "${region}" ORDER BY city_name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -89,7 +89,7 @@ City.findByRegion = (region, result) => {
 };
 
 City.findByCountry = (id, result) => {
-  sql.query(`SELECT * FROM city WHERE country_id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM city WHERE country_id = ${id} ORDER BY city_name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
