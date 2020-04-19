@@ -29,15 +29,9 @@ exports.create = (req, res) => {
 exports.findPlanId = (req, res) => {
   Plan_detail.findByPlanId(req.params.planId, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_detail with plan_id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_detail with plan_id " + req.params.planId
-        });
-      }
+      res.status(500).send({
+        message: "Error retrieving plan_detail with plan_id " + req.params.planId
+      });
     } else res.send(data);
   });
 };
@@ -54,6 +48,8 @@ exports.duplicate = (req, res) => {
           message: "Error retrieving plan_detail with plan_id " + req.params.planId
         });
       }
+    } else if (data.length === 0) {
+      res.send(data);
     } else {
       let array = [];
       for (let i = 0; i < data.length; i++) {
@@ -86,15 +82,9 @@ exports.duplicate = (req, res) => {
 exports.deletePlanIdAll = (req, res) => {
   Plan_detail.removePlanIdAll(req.params.planId, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_detail with plan_id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Could not delete plan_detail with plan_id " + req.params.planId
-        });
-      }
+      res.status(500).send({
+        message: "Could not delete plan_detail with plan_id " + req.params.planId
+      });
     } else res.send({ message: `Plan_detail with plan_id was deleted successfully!` });
   });
 };

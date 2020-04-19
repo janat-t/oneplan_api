@@ -8,7 +8,7 @@ exports.create = (req, res) => {
   }
 
   const city = new City({
-    city_name: req.body.city_name,
+    city: req.body.city,
     prefecture: req.body.prefecture,
     region: req.body.region,
     country_id: req.body.country_id

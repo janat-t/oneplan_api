@@ -2,7 +2,7 @@ const sql = require("./db.js");
 
 const City = function(city) {
   this.city_id = city.city_id;
-  this.city_name = city.city_name;
+  this.city = city.city;
   this.prefecture = city.prefecture;
   this.region = city.region;
   this.country_id = city.country_id;
@@ -22,7 +22,7 @@ City.create = (newCity, result) => {
 };
 
 City.getAll = result => {
-  sql.query("SELECT * FROM city ORDER BY city_name ASC", (err, res) => {
+  sql.query("SELECT * FROM city ORDER BY city ASC", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -53,25 +53,28 @@ City.findById = (id, result) => {
 };
 
 City.findByPrefecture = (prefecture, result) => {
-  sql.query(`SELECT * FROM city WHERE prefecture = "${prefecture}" ORDER BY city_name ASC`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    `SELECT * FROM city WHERE prefecture = "${prefecture}" ORDER BY city ASC`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      console.log("found city: ", res);
-      result(null, res);
-      return;
-    }
+      if (res.length) {
+        console.log("found city: ", res);
+        result(null, res);
+        return;
+      }
 
-    result({ kind: "not_found" }, null);
-  });
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 City.findByRegion = (region, result) => {
-  sql.query(`SELECT * FROM city WHERE region = "${region}" ORDER BY city_name ASC`, (err, res) => {
+  sql.query(`SELECT * FROM city WHERE region = "${region}" ORDER BY city ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -89,7 +92,7 @@ City.findByRegion = (region, result) => {
 };
 
 City.findByCountry = (id, result) => {
-  sql.query(`SELECT * FROM city WHERE country_id = ${id} ORDER BY city_name ASC`, (err, res) => {
+  sql.query(`SELECT * FROM city WHERE country_id = ${id} ORDER BY city ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

@@ -33,14 +33,9 @@ Plan_detail.findByPlanId = (id, result) => {
         result(err, null);
         return;
       }
-
-      if (res.length) {
-        console.log("found plan_detail: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
+      console.log("found plan_detail: ", res);
+      result(null, res);
+      return;
     }
   );
 };
@@ -52,12 +47,6 @@ Plan_detail.removePlanIdAll = (id, result) => {
       result(null, err);
       return;
     }
-
-    if (res.affectedRows == 0) {
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
     console.log("deleted plan_detail with id: ", id);
     result(null, res);
   });

@@ -37,6 +37,9 @@ const credentials = {
 };
 
 // set port, listen for requests
+// app.listen(3030, () => {
+// 	console.log("Server is running on port 3030.");
+// });
 
 https.createServer(credentials, app).listen(443, () => {
 	console.log("HTTPS Server running on port 443");
