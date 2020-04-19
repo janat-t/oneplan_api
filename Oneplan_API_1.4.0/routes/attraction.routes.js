@@ -3,6 +3,7 @@ module.exports = app => {
 	app.post("/api/attraction", attraction.create);
 	app.get("/api/attraction", attraction.findAll);
 	app.get("/api/attraction/:attractionId", attraction.findId);
+	app.get("/api/attraction/google_id/:GooglePlaceId", attraction.findGoogleId);
 	app.get("/api/attraction/ward/:wardId", attraction.findWard);
 	app.get("/api/attraction/city/:cityId", attraction.findCity);
 	app.get("/api/attraction/style/:style", attraction.findStyle);

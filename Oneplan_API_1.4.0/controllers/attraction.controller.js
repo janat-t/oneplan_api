@@ -8,6 +8,7 @@ exports.create = (req, res) => {
 
   const attraction = new Attraction({
     attraction_name: req.body.attraction_name,
+    google_place_id: req.body.google_place_id,
     attraction_name_thai: req.body.attraction_name_thai,
     attraction_type: req.body.attraction_type,
     open_time: req.body.open_time,
@@ -35,6 +36,22 @@ exports.findId = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving the attraction with attraction_id " + req.params.attractionId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+exports.findGoogleId = (req, res) => {
+  Attraction.findById(req.params.GooglePlaceId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found the attraction with google_place_id ${req.params.attractionId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving the attraction with google_place_id " + req.params.attractionId
         });
       }
     } else res.send(data);

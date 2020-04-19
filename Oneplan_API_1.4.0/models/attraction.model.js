@@ -2,6 +2,7 @@ const sql = require("./db.js");
 
 const Attraction = function(attraction) {
   this.attraction_name = attraction.attraction_name;
+  this.google_place_id = attraction.google_place_id;
   this.attraction_name_thai = attraction.attraction_name_thai;
   this.attraction_type = attraction.attraction_type;
   this.open_time = attraction.open_time;
@@ -25,6 +26,24 @@ Attraction.create = (newAttraction, result) => {
 
 Attraction.findById = (id, result) => {
   sql.query(`SELECT * FROM attraction WHERE attraction_id = ${id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found attraction: ", res);
+      result(null, res);
+      return;
+    }
+
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Attraction.findByGoogleId = (id, result) => {
+  sql.query(`SELECT * FROM attraction WHERE google_place_id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -116,9 +135,10 @@ Attraction.getAll = result => {
 
 Attraction.updateById = (id, attraction, result) => {
   sql.query(
-    "UPDATE attraction SET attraction_name = ?, attraction_name_thai = ?, attraction_type = ?, open_time = ?, close_time = ?, attraction_description = ?, ward_id = ? WHERE attraction_id = ?",
+    "UPDATE attraction SET attraction_name = ?, google_place_id = ?, attraction_name_thai = ?, attraction_type = ?, open_time = ?, close_time = ?, attraction_description = ?, ward_id = ? WHERE attraction_id = ?",
     [
       attraction.attraction_name,
+      attraction.google_place_id,
       attraction.attraction_name_thai,
       attraction.attraction_type,
       attraction.open_time,
