@@ -23,9 +23,16 @@ require("./routes/plan_startday.routes.js")(app);
 require("./routes/transport.routes.js")(app);
 require("./routes/load_plan.routes.js")(app);
 require("./routes/image.routes.js")(app);
+require("./routes/googlephotos.routes.js")(app);
 require("./routes/ward.routes.js")(app);
 require("./routes/plan_location.routes.js")(app);
 require("./routes/attraction_tag.routes.js")(app);
+
+// set port, listen for requests
+
+// app.listen(3030, () => {
+// 	console.log("Server is running on port 3030.");
+// });
 
 const privateKey = fs.readFileSync("/etc/letsencrypt/live/api.oneplan.in.th/privkey.pem", "utf8");
 const certificate = fs.readFileSync("/etc/letsencrypt/live/api.oneplan.in.th/cert.pem", "utf8");
@@ -35,11 +42,6 @@ const credentials = {
 	cert: certificate,
 	ca: ca
 };
-
-// set port, listen for requests
-// app.listen(3030, () => {
-// 	console.log("Server is running on port 3030.");
-// });
 
 https.createServer(credentials, app).listen(443, () => {
 	console.log("HTTPS Server running on port 443");

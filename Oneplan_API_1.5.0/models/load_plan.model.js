@@ -73,7 +73,7 @@ Load_plan.loadDetailId = (id, result) => {
         return;
       }
 
-      console.log("found plan: ", res);
+      console.log("found plan detail: ", res);
       result(null, res);
     }
   );

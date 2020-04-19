@@ -10,7 +10,7 @@ exports.create = (req, res) => {
     image_id: req.body.image_id,
     image_name: req.body.image_name,
     image_url: req.body.image_url,
-	attraction_id: req.body.attraction_id
+    attraction_id: req.body.attraction_id
   });
 
   Image.create(imagex, (err, data) => {
@@ -27,7 +27,7 @@ exports.findImageId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found image with image_id ${req.params.imageId}.`
+          message: "Not found image with image_id " + req.params.imageId
         });
       } else {
         res.status(500).send({
@@ -43,7 +43,7 @@ exports.findAttractionId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found image with attraction_id ${req.params.attractionId}.`
+          message: "Not found image with attraction_id " + req.params.attractionId
         });
       } else {
         res.status(500).send({
@@ -59,15 +59,17 @@ exports.deleteImageId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found image with image_id ${req.params.imageId}`
+          message: "Not found image with image_id " + req.params.imageId
         });
       } else {
         res.status(500).send({
-          message: `Not found image with image_id ${req.params.imageId}`
+          message: "Not found image with image_id " + req.params.imageId
         });
       }
     } else
-      res.send({ message: `Image with image_id ${req.params.imageId} was deleted successfully!` });
+      res.send({
+        message: "Image with image_id " + req.params.imageId + " was deleted successfully!"
+      });
   });
 };
 
@@ -76,15 +78,18 @@ exports.deleteAttractionId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found image with attraction_id ${req.params.attractionId}`
+          message: "Not found image with attraction_id " + req.params.attractionId
         });
       } else {
         res.status(500).send({
-          message: `Not found image with attraction_id ${req.params.attractionId}`
+          message: "Not found image with attraction_id " + req.params.attractionId
         });
       }
     } else
-      res.send({ message: `Image with attraction_id ${req.params.attractionId} was deleted successfully!` });
+      res.send({
+        message:
+          "Image with attraction_id " + req.params.attractionId + " was deleted successfully!"
+      });
   });
 };
 
@@ -99,7 +104,7 @@ exports.updateId = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found image with image_id  ${req.params.imageId}.`
+          message: "Not found image with image_id " + req.params.imageId
         });
       } else {
         res.status(500).send({
