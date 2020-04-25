@@ -108,21 +108,21 @@ exports.transport = async (req, res) => {
     API_key;
   let data = {};
   let error = null;
-
-  res.send({
-    distance: {
-      text: "10.3 km",
-      value: 10251
-    },
-    duration: {
-      text: "16 mins",
-      value: 940
-    },
-    status: "OK",
-    mode: "Driving"
-  });
-  return;
-
+  if (process.env.NODE_ENV === "development") {
+    res.send({
+      distance: {
+        text: "10.3 km",
+        value: 10251
+      },
+      duration: {
+        text: "16 mins",
+        value: 940
+      },
+      status: "OK",
+      mode: "Driving"
+    });
+    return;
+  }
   await axios
     .get(url)
     .then(result => {
