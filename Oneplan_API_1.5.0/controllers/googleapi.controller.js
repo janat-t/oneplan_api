@@ -15,6 +15,7 @@ exports.findId = async (req, res) => {
         {
           attraction_id: 0,
           google_place_id: req.params.placeId,
+          attraction_id: 0,
           attraction_name: result.data.result.name,
           attraction_type: result.data.result.types[0],
           attraction_link: result.data.result.url,
@@ -29,6 +30,7 @@ exports.findId = async (req, res) => {
       console.log(err);
       error = err;
     });
+  if (res === "callFunc") return data[0];
   if (error) {
     res.status(500).send({
       message: "Error retrieving place with place_id " + req.params.placeId

@@ -63,8 +63,8 @@ Load_plan.loadLocation = (id, result) => {
 
 Load_plan.loadDetailId = (id, result) => {
   sql.query(
-    `SELECT * FROM plan_detail
-  INNER JOIN attraction ON plan_detail.attraction_id = attraction.attraction_id 
+    `SELECT * FROM attraction
+  INNER JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id 
   WHERE plan_detail.plan_id = ${id} ORDER BY attraction_order`,
     (err, res) => {
       if (err) {
