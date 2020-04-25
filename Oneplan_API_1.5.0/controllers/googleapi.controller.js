@@ -15,7 +15,6 @@ exports.findId = async (req, res) => {
         {
           attraction_id: 0,
           google_place_id: req.params.placeId,
-          attraction_id: 0,
           attraction_name: result.data.result.name,
           attraction_type: result.data.result.types[0],
           attraction_link: result.data.result.url,
@@ -45,14 +44,21 @@ exports.findPhotoId = async (req, res) => {
   let url =
     "https://maps.googleapis.com/maps/api/place/details/json?place_id=" +
     req.params.placeId +
-    "&fields=photo&key=" +
+    "&fields=name,type,url,photo&key=" +
     API_key;
   let photos = [];
+  let data = [];
   let error = null;
   await axios
     .get(url)
     .then(result => {
-      console.log(result.data.result);
+      data = [
+        {
+          google_place_id: req.params.placeId,
+          attraction_type: result.data.result.types[0],
+          attraction_link: result.data.result.url
+        }
+      ];
       photos = result.data.result.photos;
     })
     .catch(err => {
@@ -65,37 +71,21 @@ exports.findPhotoId = async (req, res) => {
     });
     return;
   }
-  if (photos.length === 0) {
-    res.status(404).send({
-      message: "Not found image " + req.params.placeId
-    });
-    console.log("photo not found");
-    return;
-  }
-  // console.log("found photo: ", photos);
   let photoUrls = [];
-  await Promise.all(
-    photos.map(async photo => {
+  if (photos) {
+    photos.map(photo => {
       let request =
         "https://maps.googleapis.com/maps/api/place/photo?maxwidth=480&photoreference=" +
         photo.photo_reference +
         "&key=" +
         API_key;
-      let newUrl = "";
-      await axios
-        .head(request)
-        .then(result => {
-          let newUrl = result.request._redirectable._currentUrl;
-          console.log(newUrl);
-          photoUrls.push(newUrl);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      return newUrl;
-    })
-  );
-  res.send(photoUrls);
+      photoUrls.push(request);
+    });
+  }
+
+  data[0] = { ...data[0], photos: photoUrls };
+  console.log(data);
+  res.send(data);
 };
 
 exports.transport = async (req, res) => {
