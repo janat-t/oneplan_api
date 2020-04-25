@@ -5,15 +5,25 @@ exports.findId = async (req, res) => {
   let url =
     "https://maps.googleapis.com/maps/api/place/details/json?place_id=" +
     req.params.placeId +
-    "&fields=name, &key=" +
+    "&fields=name,type,url&key=" +
     API_key;
-  let photos = [];
   let error = null;
   await axios
     .get(url)
     .then(result => {
-      console.log(result.data.result);
-      photos = result.data.result.photos;
+      data = [
+        {
+          attraction_id: 0,
+          google_place_id: req.params.placeId,
+          attraction_name: result.data.result.name,
+          attraction_type: result.data.result.types[0],
+          attraction_link: result.data.result.url,
+          open_time: "",
+          close_time: "",
+          attraction_description: "",
+          ward_id: 0
+        }
+      ];
     })
     .catch(err => {
       console.log(err);
@@ -21,28 +31,12 @@ exports.findId = async (req, res) => {
     });
   if (error) {
     res.status(500).send({
-      message: "Error retrieving image of place with place_id " + req.params.placeId
+      message: "Error retrieving place with place_id " + req.params.placeId
     });
     return;
   }
-  if (photos.length === 0) {
-    res.status(404).send({
-      message: "Not found image " + req.params.placeId
-    });
-    console.log("photo not found");
-    return;
-  }
-  // console.log("found photo: ", photos);
-  let photoUrls = [];
-  await photos.map(photo => {
-    photoUrls.push(
-      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=480&photoreference=" +
-        photo.photo_reference +
-        "&key=" +
-        API_key
-    );
-  });
-  res.send(photoUrls);
+  console.log(data);
+  res.send(data);
 };
 
 exports.findPhotoId = async (req, res) => {
@@ -112,6 +106,20 @@ exports.transport = async (req, res) => {
     API_key;
   let data = {};
   let error = null;
+
+  res.send({
+    distance: {
+      text: "10.3 km",
+      value: 10251
+    },
+    duration: {
+      text: "16 mins",
+      value: 940
+    },
+    status: "OK",
+    mode: "Driving"
+  });
+  return;
 
   await axios
     .get(url)

@@ -43,7 +43,7 @@ Attraction.findById = (id, result) => {
 };
 
 Attraction.findByGoogleId = (id, result) => {
-  sql.query(`SELECT * FROM attraction WHERE google_place_id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM attraction WHERE google_place_id = "${id}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

@@ -1,4 +1,7 @@
 const Attraction = require("../models/attraction.model.js");
+const axios = require("axios");
+const { API_key } = require("../config/googleapi.config.js");
+const googleapi = require("./googleapi.controller.js");
 exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -43,12 +46,10 @@ exports.findId = (req, res) => {
 };
 
 exports.findGoogleId = (req, res) => {
-  Attraction.findById(req.params.GooglePlaceId, (err, data) => {
+  Attraction.findByGoogleId(req.params.placeId, async (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found the attraction with google_place_id ${req.params.attractionId}.`
-        });
+        googleapi.findId(req, res);
       } else {
         res.status(500).send({
           message: "Error retrieving the attraction with google_place_id " + req.params.attractionId
