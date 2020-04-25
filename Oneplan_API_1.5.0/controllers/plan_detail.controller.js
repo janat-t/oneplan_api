@@ -14,6 +14,7 @@ exports.create = (req, res) => {
     end_time: req.body.end_time,
     time_spend: req.body.time_spend,
     attraction_id: req.body.attraction_id,
+    google_place_id: req.body.google_place_id,
     description: req.body.description
   });
 
@@ -61,6 +62,7 @@ exports.duplicate = (req, res) => {
           end_time: data[i].end_time,
           time_spend: data[i].time_spend,
           attraction_id: data[i].attraction_id,
+          google_place_id: data[i].google_place_id,
           description: data[i].description
         });
         Plan_detail.create(plan_detail, (err, data2) => {
@@ -90,20 +92,20 @@ exports.deletePlanIdAll = (req, res) => {
 };
 
 exports.deletePlanIdOne = (req, res) => {
-  Plan_detail.removePlanIdOne(req.params.planId, req.params.day, req.params.order, (err, data) => {
+  Plan_detail.removePlanIdOne(req.params.planId, req.params.order, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan_detail with plan_id ${req.params.planId} day ${req.params.day} attraction_order ${req.params.order}..`
+          message: `Not found plan_detail with plan_id ${req.params.planId} attraction_order ${req.params.order}..`
         });
       } else {
         res.status(500).send({
-          message: `Not found plan_detail with plan_id ${req.params.planId} day ${req.params.day} attraction_order ${req.params.order}.`
+          message: `Not found plan_detail with plan_id ${req.params.planId} attraction_order ${req.params.order}.`
         });
       }
     } else
       res.send({
-        message: `Plan_detail with plan_id ${req.params.planId} day ${req.params.day} attraction_order ${req.params.order}. was deleted successfully!`
+        message: `Plan_detail with plan_id ${req.params.planId} attraction_order ${req.params.order}. was deleted successfully!`
       });
   });
 };
@@ -117,7 +119,6 @@ exports.updateOne = (req, res) => {
 
   Plan_detail.updateByIdOne(
     req.params.planId,
-    req.params.day,
     req.params.order,
     new Plan_detail(req.body),
     (err, data) => {
