@@ -73,6 +73,52 @@ exports.findPhotoId = async (req, res) => {
   }
   let photoUrls = [];
   if (photos) {
+    let request =
+      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=480&photoreference=" +
+      photos[0].photo_reference +
+      "&key=" +
+      API_key;
+    photoUrls.push(request);
+  }
+
+  data[0] = { ...data[0], photos: photoUrls };
+  console.log(data);
+  res.send(data);
+};
+
+exports.findPhotosId = async (req, res) => {
+  let url =
+    "https://maps.googleapis.com/maps/api/place/details/json?place_id=" +
+    req.params.placeId +
+    "&fields=name,type,url,photo&key=" +
+    API_key;
+  let photos = [];
+  let data = [];
+  let error = null;
+  await axios
+    .get(url)
+    .then(result => {
+      data = [
+        {
+          google_place_id: req.params.placeId,
+          attraction_type: result.data.result.types[0],
+          attraction_link: result.data.result.url
+        }
+      ];
+      photos = result.data.result.photos;
+    })
+    .catch(err => {
+      console.log(err);
+      error = err;
+    });
+  if (error) {
+    res.status(500).send({
+      message: "Error retrieving image of place with place_id " + req.params.placeId
+    });
+    return;
+  }
+  let photoUrls = [];
+  if (photos) {
     photos.map(photo => {
       let request =
         "https://maps.googleapis.com/maps/api/place/photo?maxwidth=480&photoreference=" +
