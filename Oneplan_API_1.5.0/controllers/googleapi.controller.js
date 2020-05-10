@@ -5,7 +5,7 @@ exports.findId = async (req, res) => {
   let url =
     "https://maps.googleapis.com/maps/api/place/details/json?place_id=" +
     req.params.placeId +
-    "&fields=name,type,url&key=" +
+    "&fields=name,type,url,geometry&key=" +
     API_key;
   let error = null;
   await axios
@@ -18,12 +18,42 @@ exports.findId = async (req, res) => {
           attraction_name: result.data.result.name,
           attraction_type: result.data.result.types[0],
           attraction_link: result.data.result.url,
+          geometry: result.data.result.geometry,
           open_time: "",
           close_time: "",
           attraction_description: "",
           ward_id: 0
         }
       ];
+    })
+    .catch(err => {
+      console.log(err);
+      error = err;
+    });
+  if (res === "callFunc") return data[0];
+  if (error) {
+    res.status(500).send({
+      message: "Error retrieving place with place_id " + req.params.placeId
+    });
+    return;
+  }
+  console.log(data);
+  res.send(data);
+};
+
+exports.findNearby = async (req, res) => {
+  let url =
+    "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
+    req.query.lat +
+    "," +
+    req.query.lng +
+    "&radius=3000&key=" +
+    API_key;
+  let error = null;
+  await axios
+    .get(url)
+    .then(result => {
+      data = result.data.results;
     })
     .catch(err => {
       console.log(err);
