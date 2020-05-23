@@ -28,6 +28,7 @@ require("./routes/ward.routes.js")(app);
 require("./routes/plan_location.routes.js")(app);
 require("./routes/attraction_tag.routes.js")(app);
 require("./routes/response.routes.js")(app);
+require("./routes/plan_tag.routes.js")(app);
 
 // set port, listen for requests
 
