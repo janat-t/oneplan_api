@@ -22,7 +22,8 @@ exports.create = (req, res) => {
   Plan_overview.create(plan_overview, (err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the plan_overview."
+        message:
+          err.message || "Some error occurred while creating the plan_overview."
       });
     else res.send(data);
   });
@@ -37,7 +38,8 @@ exports.findId = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving plan_overview with plan_id " + req.params.planId
+          message:
+            "Error retrieving plan_overview with plan_id " + req.params.planId
         });
       }
     } else res.send(data);
@@ -53,90 +55,110 @@ exports.findUser = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving plan_overview of user with user_id " + req.params.userId
+          message:
+            "Error retrieving plan_overview of user with user_id " +
+            req.params.userId
         });
       }
     } else res.send(data);
   });
 };
 
-exports.findCriteria = (req, res) => {
-  Plan_overview.findByCriteria(req.params.cityId, req.params.start, req.params.stop, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_overview in city with the current criteria.`
-        });
+exports.findCriteria = async (req, res) => {
+  Plan_overview.findByCriteria(
+    req.params.cityId,
+    req.params.start,
+    req.params.stop,
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found plan_overview in city with the current criteria.`
+          });
+        } else {
+          res.status(500).send({
+            message:
+              "Error retrieving plan_overview in city with the current criteria"
+          });
+        }
       } else {
-        res.status(500).send({
-          message: "Error retrieving plan_overview in city with the current criteria"
+        let interest_style = req.params.style.split(",");
+        let array = [];
+        var promises = [];
+        for (let i = 0; i < data.length; i++) {
+          promises.push(
+            Plan_tag.findByPlanId(data[i].plan_id, (err, result) => {
+              if (err)
+                res.status(500).send({
+                  message:
+                    err.message ||
+                    "Some error occurred while retriving plan_tag with plan_id " +
+                      data[i].plan_id
+                });
+              else {
+                //console.log(result);
+                let countx = 0;
+                for (let j = 0; j < interest_style.length; j++) {
+                  let check = false;
+                  for (let k = 0; k < result.length; k++) {
+                    if (interest_style[j] == result[k].plan_style) {
+                      check = true;
+                      break;
+                    }
+                  }
+                  if (check) countx = countx + 1;
+                }
+                //console.log(countx);
+                let temp = { plan_id: data[i].plan_id, search_match: countx };
+                array = array.concat([temp]);
+                console.log("FX");
+                console.log(array);
+              }
+            })
+          );
+        }
+        //console.log("NOW");
+        //console.log(array);
+        Promise.all(promises).then(() => {
+          array.sort(function (x, y) {
+            if (
+              x.search_match < y.search_match ||
+              (x.search_match == y.search_match && x.plan_id < y.plan_id)
+            )
+              return -1;
+            else return 1;
+          });
+          let final_result = [];
+          for (let i = 0; i < array.length; i++) {
+            Plan_overview.findById(req.params.planId, (err, plan_data) => {
+              if (err) {
+                if (err.kind === "not_found") {
+                  res.status(404).send({
+                    message: `Not found plan_overview with plan_id ${req.params.planId}.`
+                  });
+                } else {
+                  res.status(500).send({
+                    message:
+                      "Error retrieving plan_overview with plan_id " +
+                      req.params.planId
+                  });
+                }
+              } else final_result.concat(plan_data);
+            });
+          }
+          res.send(final_result);
         });
       }
-    } else{
-		let interest_style = req.params.style.split(",");
-		let array = [];
-		for (let i = 0; i < data.length; i++) {
-			Plan_tag.findByPlanId(data[i].plan_id, (err, result) => {
-				if (err)
-					res.status(500).send({
-						message:
-							err.message ||
-								"Some error occurred while retriving plan_tag with plan_id " +
-							data[i].plan_id
-				});
-				else{
-					//console.log(result);
-					let countx = 0;
-					for (let j = 0; j < interest_style.length; j++){
-						let check = false;
-						for (let k = 0; k < result.length; k++){
-							if (interest_style[j] == result[k].plan_style){
-								check = true;
-								break;
-							}
-						}
-						if(check) countx = countx + 1;
-					}
-					//console.log(countx);
-					let temp = {plan_id: data[i].plan_id, search_match: countx}
-					array = array.concat([temp]);
-					console.log("FX");
-					console.log(array);
-				}					
-			});
-		}
-		//console.log("NOW");
-		//console.log(array);
-		array.sort(function(x,y) {
-			if((x.search_match<y.search_match)||(x.search_match==y.search_match&&x.plan_id<y.plan_id)) return -1;
-			else return 1;
-		});
-		let final_result = [];
-		for (let i = 0; i < array.length; i++) {
-			Plan_overview.findById(req.params.planId, (err, plan_data) => {
-				if (err) {
-					if (err.kind === "not_found") {
-						res.status(404).send({
-							message: `Not found plan_overview with plan_id ${req.params.planId}.`
-						});
-					} else {
-						res.status(500).send({
-							message: "Error retrieving plan_overview with plan_id " + req.params.planId
-						});
-					}
-				} else final_result.concat(plan_data);
-			});
-		}
-		res.send(final_result);
-	}
-  });
+    }
+  );
 };
 
 exports.findAll = (req, res) => {
   Plan_overview.getAll((err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving plan_overview."
+        message:
+          err.message || "Some error occurred while retrieving plan_overview."
       });
     else res.send(data);
   });
@@ -149,19 +171,24 @@ exports.update = (req, res) => {
     });
   }
 
-  Plan_overview.updateById(req.params.planId, new Plan_overview(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found Plan_overview with id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error updating plan_overview with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
+  Plan_overview.updateById(
+    req.params.planId,
+    new Plan_overview(req.body),
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Plan_overview with id ${req.params.planId}.`
+          });
+        } else {
+          res.status(500).send({
+            message:
+              "Error updating plan_overview with plan_id " + req.params.planId
+          });
+        }
+      } else res.send(data);
+    }
+  );
 };
 
 exports.delete = (req, res) => {
@@ -173,7 +200,8 @@ exports.delete = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message: "Could not delete plan_overview with plan_id " + req.params.planId
+          message:
+            "Could not delete plan_overview with plan_id " + req.params.planId
         });
       }
     } else
@@ -192,7 +220,8 @@ exports.duplicate = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving plan_overview with plan_id " + req.params.planId
+          message:
+            "Error retrieving plan_overview with plan_id " + req.params.planId
         });
       }
     } else {
