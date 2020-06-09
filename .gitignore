@@ -1,5 +1,6 @@
 node_modules/
 .DS_Store
 .env
+*.swp
 oneplan_api.sublime-project
 oneplan_api.sublime-workspace

@@ -64,12 +64,13 @@ exports.findUser = (req, res) => {
   });
 };
 
-exports.findCriteria = async (req, res) => {
-  Plan_overview.findByCriteria(
+exports.findCriteria = (req, res) => {
+  Plan_overview.findByCriteriaTag(
     req.params.cityId,
     req.params.start,
     req.params.stop,
-    (err, data) => {
+    ('"' + req.params.style.replace(",", '","') + '"').split(","),
+    async (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
@@ -81,74 +82,7 @@ exports.findCriteria = async (req, res) => {
               "Error retrieving plan_overview in city with the current criteria"
           });
         }
-      } else {
-        let interest_style = req.params.style.split(",");
-        let array = [];
-        var promises = [];
-        for (let i = 0; i < data.length; i++) {
-          promises.push(
-            Plan_tag.findByPlanId(data[i].plan_id, (err, result) => {
-              if (err)
-                res.status(500).send({
-                  message:
-                    err.message ||
-                    "Some error occurred while retriving plan_tag with plan_id " +
-                      data[i].plan_id
-                });
-              else {
-                //console.log(result);
-                let countx = 0;
-                for (let j = 0; j < interest_style.length; j++) {
-                  let check = false;
-                  for (let k = 0; k < result.length; k++) {
-                    if (interest_style[j] == result[k].plan_style) {
-                      check = true;
-                      break;
-                    }
-                  }
-                  if (check) countx = countx + 1;
-                }
-                //console.log(countx);
-                let temp = { plan_id: data[i].plan_id, search_match: countx };
-                array = array.concat([temp]);
-                console.log("FX");
-                console.log(array);
-              }
-            })
-          );
-        }
-        //console.log("NOW");
-        //console.log(array);
-        Promise.all(promises).then(() => {
-          array.sort(function (x, y) {
-            if (
-              x.search_match < y.search_match ||
-              (x.search_match == y.search_match && x.plan_id < y.plan_id)
-            )
-              return -1;
-            else return 1;
-          });
-          let final_result = [];
-          for (let i = 0; i < array.length; i++) {
-            Plan_overview.findById(req.params.planId, (err, plan_data) => {
-              if (err) {
-                if (err.kind === "not_found") {
-                  res.status(404).send({
-                    message: `Not found plan_overview with plan_id ${req.params.planId}.`
-                  });
-                } else {
-                  res.status(500).send({
-                    message:
-                      "Error retrieving plan_overview with plan_id " +
-                      req.params.planId
-                  });
-                }
-              } else final_result.concat(plan_data);
-            });
-          }
-          res.send(final_result);
-        });
-      }
+      } else res.send(data);
     }
   );
 };

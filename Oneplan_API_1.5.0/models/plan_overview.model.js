@@ -1,6 +1,6 @@
 const sql = require("./db.js");
 
-const Plan_overview = function(plan_overview) {
+const Plan_overview = function (plan_overview) {
   this.plan_id = plan_overview.plan_id;
   this.plan_title = plan_overview.plan_title;
   this.user_id = plan_overview.user_id;
@@ -27,65 +27,90 @@ Plan_overview.create = (newPlan, result) => {
 };
 
 Plan_overview.findById = (id, result) => {
-  sql.query(`SELECT * FROM plan_overview
-  INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id 
-  WHERE plan_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    `SELECT * FROM plan_overview
+  INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id
+  WHERE plan_overview.plan_id = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      console.log("found plan_overview: ", res);
-      result(null, res);
-      return;
-    }
+      if (res.length) {
+        console.log("found plan_overview: ", res);
+        result(null, res);
+        return;
+      }
 
-    result({ kind: "not_found" }, null);
-  });
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 Plan_overview.findByUser = (id, result) => {
-  sql.query(`SELECT * FROM plan_overview
-  INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id 
-  WHERE user_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    `SELECT * FROM plan_overview
+  INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id
+  WHERE user_id = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      console.log("found plan_overview: ", res);
-      result(null, res);
-      return;
-    }
+      if (res.length) {
+        console.log("found plan_overview: ", res);
+        result(null, res);
+        return;
+      }
 
-    result({ kind: "not_found" }, null);
-  });
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
-Plan_overview.findByCriteria = (id, start,stop,result) => {
+Plan_overview.findByCriteria = (id, start, stop, result) => {
   sql.query(
     "SELECT plan_id FROM plan_overview WHERE city_id = ? AND (duration BETWEEN ? AND ?)",
-    [
-      id,
-      start,
-      stop
-    ], (err, res) => {
+    [id, start, stop],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        console.log("found plan_overview: ", res);
+        result(null, res);
+        return;
+      }
+
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
+Plan_overview.findByCriteriaTag = (id, start, stop, tags, result) => {
+  var q =
+    "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE plan_style IN (" +
+    tags +
+    ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC";
+  console.log(q);
+  sql.query(q, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-
     if (res.length) {
       console.log("found plan_overview: ", res);
       result(null, res);
       return;
     }
-
     result({ kind: "not_found" }, null);
   });
 };
