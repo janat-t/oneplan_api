@@ -10,7 +10,6 @@ const Plan_overview = function (plan_overview) {
   this.original_id = plan_overview.original_id;
   this.available = plan_overview.available;
   this.star_rating = plan_overview.star_rating;
-  this.search_match = 0;
 };
 
 Plan_overview.create = (newPlan, result) => {
