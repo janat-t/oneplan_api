@@ -100,17 +100,16 @@
 
 ## Plan Overview
 
-| HTTP Type | API URL                                  | Comments                                                                                        |
-| --------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| POST      | /api/plan_overview                       | Create a new plan overview                                                                      |
-| POST      | /api/plan_overview/:planId/:userId       | Duplicate a new plan overview by plan id then change user id                                    |
-| GET       | /api/plan_overview                       | Lists plan overviews                                                                            |
-| GET       | /api/plan_overview/:planId               | Retrieve a plan overview by plan id                                                             |
-| GET       | /api/plan_overview/user/:userId          | Retrieve plan overviews by user id                                                              |
-| GET       | /api/plan_overview/city/:cityId          | Retrieve plan overviews by city id                                                              |
-| GET       | /api/plan_overview/style/:style          | Retrieve plan overviews by style                                                                |
-| PUT       | /api/plan_overview/:planId               | Update plan overview by plan id                                                                 |
-| DELETE    | /api/plan_overview/:planId               | Delete a plan overview by plan id                                                               |
+| HTTP Type | API URL                                                 | Comments                                                                                        |
+| --------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| POST      | /api/plan_overview                                      | Create a new plan overview                                                                      |
+| POST      | /api/plan_overview/:planId/:userId                      | Duplicate a new plan overview by plan id then change user id                                    |
+| GET       | /api/plan_overview                                      | Lists plan overviews                                                                            |
+| GET       | /api/plan_overview/:planId                              | Retrieve a plan overview by plan id                                                             |
+| GET       | /api/plan_overview/user/:userId                         | Retrieve plan overviews by user id                                                              |
+| GET       | /api/plan_overview/criteria/:cityId/:start/:stop/:style | Retrieve plan overviews by city id                                                              |
+| PUT       | /api/plan_overview/:planId                              | Update plan overview by plan id                                                                 |
+| DELETE    | /api/plan_overview/:planId                              | Delete a plan overview by plan id                                                               |
 
 ## Plan Startday
 
