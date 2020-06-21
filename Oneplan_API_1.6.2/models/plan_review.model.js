@@ -1,0 +1,121 @@
+const sql = require("./db.js");
+
+const Plan_review = function (plan_review) {
+  this.review_id = plan_review.review_id;
+  this.plan_id = plan_review.plan_id;
+  this.review = plan_review.review;
+};
+
+Plan_review.create = (newPlan, result) => {
+  sql.query("INSERT INTO plan_review SET ?", newPlan, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("created plan_review: ", { id: res.insertId, ...newPlan });
+    result(null, { id: res.insertId, ...newPlan });
+  });
+};
+
+Plan_review.findById = (id, result) => {
+  sql.query(
+    `SELECT * FROM plan_review WHERE review_id = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        console.log("found plan_review: ", res);
+        result(null, res);
+        return;
+      }
+
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
+Plan_review.findByPlanId = (id, result) => {
+  sql.query(
+    `SELECT * FROM plan_review WHERE plan_id = ${id} ORDER BY updated_time DESC`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        console.log("found plan_review: ", res);
+        result(null, res);
+        return;
+      }
+
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
+Plan_review.getAll = result => {
+  sql.query("SELECT * FROM plan_review", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("plan_review: ", res);
+    result(null, res);
+  });
+};
+
+Plan_review.updateById = (id, plan_review, result) => {
+  sql.query(
+    "UPDATE plan_review SET plan_id = ?, review = ? WHERE review_id = ?",
+    [
+      plan_review.plan_id,
+      plan_review.review,
+      id
+    ],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated plan_review: ", { id: id, ...plan_review });
+      result(null, { id: id, ...plan_review });
+    }
+  );
+};
+
+Plan_review.remove = (id, result) => {
+  sql.query("DELETE FROM plan_review WHERE review_id = ?", id, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    console.log("deleted plan_review with id: ", id);
+    result(null, res);
+  });
+};
+
+module.exports = Plan_review;

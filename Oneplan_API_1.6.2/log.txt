@@ -1,0 +1,11 @@
+16 April 2020
+1. Table "attraction"
+- Added column "attraction_link"
+- Deleted column "attraction_type"
+- Modified function "findStyle"
+2. Table "image"
+- Added column "attraction_id"
+- Added function "findAttractionId" and "deleteAttractionId"
+3. Table "attraction_tag"
+- Added table
+- Added function "create", "findAttractionId", "findStyle", "deleteAttractionId", and "deteleStyle"
