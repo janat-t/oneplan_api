@@ -6,4 +6,5 @@ module.exports = app => {
   app.get("/api/plan_review/plan_id/:planId", plan_review.findPlanId);
   app.put("/api/plan_review/:reviewId", plan_review.update);
   app.delete("/api/plan_review/:reviewId", plan_review.delete);
+  app.get("/api/plan_review", plan_review.sum);
 };
