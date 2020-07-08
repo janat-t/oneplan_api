@@ -10,6 +10,7 @@ exports.create = (req, res) => {
 
   const plan_review = new Plan_review({
     plan_id: req.body.plan_id,
+	rating: req.body.rating,
     review: req.body.review
   });
 
@@ -112,5 +113,16 @@ exports.delete = (req, res) => {
       res.send({
         message: `Plan_review with review_id ${req.params.reviewId} was deleted successfully!`
       });
+  });
+};
+
+exports.sum = (req, res) => {
+  Plan_review.getSum((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving plan_review."
+      });
+    else res.send(data);
   });
 };
