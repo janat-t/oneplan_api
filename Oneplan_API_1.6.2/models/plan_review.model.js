@@ -3,6 +3,7 @@ const sql = require("./db.js");
 const Plan_review = function (plan_review) {
   this.review_id = plan_review.review_id;
   this.plan_id = plan_review.plan_id;
+  this.rating = plan_review.rating;
   this.review = plan_review.review;
 };
 
@@ -76,9 +77,10 @@ Plan_review.getAll = result => {
 
 Plan_review.updateById = (id, plan_review, result) => {
   sql.query(
-    "UPDATE plan_review SET plan_id = ?, review = ? WHERE review_id = ?",
+    "UPDATE plan_review SET plan_id = ?, rating = ?, review = ? WHERE review_id = ?",
     [
       plan_review.plan_id,
+	  plan_review.rating,
       plan_review.review,
       id
     ],
@@ -114,6 +116,19 @@ Plan_review.remove = (id, result) => {
     }
 
     console.log("deleted plan_review with id: ", id);
+    result(null, res);
+  });
+};
+
+Plan_review.getSum = result => {
+  sql.query("SELECT SUM(rating)/COUNT(rating) FROM plan_review", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("plan_review: ", res);
     result(null, res);
   });
 };
