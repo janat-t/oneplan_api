@@ -126,11 +126,12 @@
 | HTTP Type | API URL                                | Comments                                                          |
 | --------- | -------------------------------------- | ----------------------------------------------------------------- |
 | POST      | /api/plan_review                       | Create a new plan review                                          |
-| GET       | /api/plan_review                       | Retrieve plan reviews                                             |
-| GET       | /api/plan_review/:reviewId             | Retrieve plan reviews by reviewId                                 |
-| GET       | /api/plan_review/plan_id/:planId       | Retrieve plan reviews by plan_id                                  |
-| PUT       | /api/plan_review/:reviewId             | Update a plan review by review id                                 |
-| DELETE    | /api/plan_startday/delete/:planId/:day | Delete a plan review by plan_id and day                           |
+| GET       | /api/plan_review                       | Retrieve plan ratings and reviews                                             |
+| GET       | /api/plan_review/:reviewId             | Retrieve plan ratings and reviews by reviewId                                 |
+| GET       | /api/plan_review/:planId               | Retrieve plan ratings and reviews by plan_id                                  |
+| PUT       | /api/plan_review/:reviewId             | Update a plan ratings and review by review id                                 |
+| DELETE    | /api/plan_startday/delete/:planId/:day | Delete a plan ratings and review by plan_id and day                           |
+| GET       | /api/plan_review/:planId               | Retrieve average plan ratings by reviewId                                     |
 
 ## Plan Startday
 
