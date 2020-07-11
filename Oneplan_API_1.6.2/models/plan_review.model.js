@@ -1,7 +1,6 @@
 const sql = require("./db.js");
 
 const Plan_review = function (plan_review) {
-  this.review_id = plan_review.review_id;
   this.plan_id = plan_review.plan_id;
   this.rating = plan_review.rating;
   this.review = plan_review.review;
