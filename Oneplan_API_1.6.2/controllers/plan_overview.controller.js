@@ -1,5 +1,4 @@
 const Plan_overview = require("../models/plan_overview.model.js");
-const Plan_tag = require("../models/plan_tag.model.js");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -25,7 +24,16 @@ exports.create = (req, res) => {
         message:
           err.message || "Some error occurred while creating the plan_overview."
       });
-    else res.send(data);
+    else{
+		Plan_overview.auto_tag_insert(data.id, (err, data2) => {
+			if (err)
+				res.status(500).send({
+					message:
+						err.message || "Some error occurred while creating the plan_overview."
+				});
+			else res.send(data2);
+		})
+	}
   });
 };
 
