@@ -110,16 +110,26 @@ Plan_overview.findByCriteria = (id, start, stop, result) => {
 };
 
 Plan_overview.findByCriteriaTag = (id, start, stop, tags, result) => {
-  var q =
-    "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE city_id = " +
-    id +
-    " AND (duration BETWEEN " +
-    start +
-    " AND " +
-    stop +
-    ") AND plan_style IN (" +
-    tags +
-    ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, star_rating DESC";
+  if (id === "all")
+    var q =
+      "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE (duration BETWEEN " +
+      start +
+      " AND " +
+      stop +
+      ") AND plan_style IN (" +
+      tags +
+      ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, star_rating DESC";
+  else
+    var q =
+      "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE city_id = " +
+      id +
+      " AND (duration BETWEEN " +
+      start +
+      " AND " +
+      stop +
+      ") AND plan_style IN (" +
+      tags +
+      ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, star_rating DESC";
   console.log(q);
   sql.query(q, (err, res) => {
     if (err) {

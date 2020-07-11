@@ -21,19 +21,17 @@ exports.create = (req, res) => {
   Plan_overview.create(plan_overview, (err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the plan_overview."
+        message: err.message || "Some error occurred while creating the plan_overview."
       });
-    else{
-		Plan_overview.auto_tag_insert(data.id, (err, data2) => {
-			if (err)
-				res.status(500).send({
-					message:
-						err.message || "Some error occurred while creating the plan_overview."
-				});
-			else res.send(data2);
-		})
-	}
+    else {
+      Plan_overview.auto_tag_insert(data.id, (err, data2) => {
+        if (err)
+          res.status(500).send({
+            message: err.message || "Some error occurred while creating the plan_overview."
+          });
+        else res.send(data2);
+      });
+    }
   });
 };
 
@@ -46,8 +44,7 @@ exports.findId = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message:
-            "Error retrieving plan_overview with plan_id " + req.params.planId
+          message: "Error retrieving plan_overview with plan_id " + req.params.planId
         });
       }
     } else res.send(data);
@@ -63,9 +60,7 @@ exports.findUser = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message:
-            "Error retrieving plan_overview of user with user_id " +
-            req.params.userId
+          message: "Error retrieving plan_overview of user with user_id " + req.params.userId
         });
       }
     } else res.send(data);
@@ -86,8 +81,7 @@ exports.findCriteria = (req, res) => {
           });
         } else {
           res.status(500).send({
-            message:
-              "Error retrieving plan_overview in city with the current criteria"
+            message: "Error retrieving plan_overview in city with the current criteria"
           });
         }
       } else res.send(data);
@@ -99,8 +93,7 @@ exports.findAll = (req, res) => {
   Plan_overview.getAll((err, data) => {
     if (err)
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving plan_overview."
+        message: err.message || "Some error occurred while retrieving plan_overview."
       });
     else res.send(data);
   });
@@ -113,24 +106,19 @@ exports.update = (req, res) => {
     });
   }
 
-  Plan_overview.updateById(
-    req.params.planId,
-    new Plan_overview(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Plan_overview with id ${req.params.planId}.`
-          });
-        } else {
-          res.status(500).send({
-            message:
-              "Error updating plan_overview with plan_id " + req.params.planId
-          });
-        }
-      } else res.send(data);
-    }
-  );
+  Plan_overview.updateById(req.params.planId, new Plan_overview(req.body), (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Plan_overview with id ${req.params.planId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error updating plan_overview with plan_id " + req.params.planId
+        });
+      }
+    } else res.send(data);
+  });
 };
 
 exports.delete = (req, res) => {
@@ -142,8 +130,7 @@ exports.delete = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message:
-            "Could not delete plan_overview with plan_id " + req.params.planId
+          message: "Could not delete plan_overview with plan_id " + req.params.planId
         });
       }
     } else
@@ -162,8 +149,7 @@ exports.duplicate = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message:
-            "Error retrieving plan_overview with plan_id " + req.params.planId
+          message: "Error retrieving plan_overview with plan_id " + req.params.planId
         });
       }
     } else {
