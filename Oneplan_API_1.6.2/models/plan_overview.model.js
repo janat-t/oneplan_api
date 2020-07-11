@@ -25,6 +25,18 @@ Plan_overview.create = (newPlan, result) => {
   });
 };
 
+Plan_overview.auto_tag_insert = (id, result) => {
+	sql.query('INSERT INTO plan_tag (plan_id,plan_style) VALUE (?,?)',[id,"AUTO_TAG"], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    result(null, {id });
+  });
+};
+
 Plan_overview.findById = (id, result) => {
   sql.query(
     `SELECT * FROM plan_overview
