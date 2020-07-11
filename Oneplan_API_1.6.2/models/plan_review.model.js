@@ -120,15 +120,15 @@ Plan_review.remove = (id, result) => {
   });
 };
 
-Plan_review.getSum = result => {
-  sql.query("SELECT SUM(rating)/COUNT(rating) FROM plan_review", (err, res) => {
+Plan_review.getSum = (id, result) => {
+  sql.query("SELECT SUM(rating)/COUNT(rating) FROM plan_review WHERE review_id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
 
-    console.log("plan_review: ", res);
+    console.log("plan_review: ", id);
     result(null, res);
   });
 };
