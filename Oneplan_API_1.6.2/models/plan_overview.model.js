@@ -26,15 +26,19 @@ Plan_overview.create = (newPlan, result) => {
 };
 
 Plan_overview.auto_tag_insert = (id, result) => {
-	sql.query('INSERT INTO plan_tag (plan_id,plan_style) VALUE (?,?)',[id,"AUTO_TAG"], (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+  sql.query(
+    "INSERT INTO plan_tag (plan_id,plan_style) VALUE (?,?)",
+    [id, "AUTO_TAG"],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    result(null, {id });
-  });
+      result(null, { id });
+    }
+  );
 };
 
 Plan_overview.findById = (id, result) => {
@@ -124,7 +128,7 @@ Plan_overview.findByCriteriaTag = (id, start, stop, tags, result) => {
       return;
     }
     if (res.length) {
-      console.log("found plan_overview: ", res);
+      console.log("found plan_overview match criteria: ", res);
       result(null, res);
       return;
     }
