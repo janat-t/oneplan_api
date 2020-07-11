@@ -107,7 +107,13 @@ Plan_overview.findByCriteria = (id, start, stop, result) => {
 
 Plan_overview.findByCriteriaTag = (id, start, stop, tags, result) => {
   var q =
-    "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE plan_style IN (" +
+    "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE city_id = " +
+    id +
+    " AND (duration BETWEEN " +
+    start +
+    " AND " +
+    stop +
+    ") AND plan_style IN (" +
     tags +
     ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, star_rating DESC";
   console.log(q);
