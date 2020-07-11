@@ -10,7 +10,7 @@ exports.create = (req, res) => {
 
   const plan_review = new Plan_review({
     plan_id: req.body.plan_id,
-	rating: req.body.rating,
+    rating: req.body.rating,
     review: req.body.review
   });
 
