@@ -117,12 +117,18 @@ exports.delete = (req, res) => {
 };
 
 exports.sum = (req, res) => {
-  Plan_review.getSum((err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving plan_review."
-      });
-    else res.send(data);
+  Plan_review.getSum(req.params.planId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found plan_review with plan_id ${req.params.planId}.`
+        });
+      } else {
+        res.status(500).send({
+          message:
+            "Error retrieving plan_review with plan_id " + req.params.planId
+        });
+      }
+    } else res.send(data);
   });
 };
