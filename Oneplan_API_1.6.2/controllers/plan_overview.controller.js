@@ -72,7 +72,7 @@ exports.findCriteria = (req, res) => {
     req.params.cityId,
     req.params.start,
     req.params.stop,
-    ('"' + req.params.style.replace(",", '","') + '"').split(","),
+    ('"' + req.params.style.replace(/,/g, '","') + '"').split(","),
     async (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
