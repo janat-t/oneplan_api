@@ -10,7 +10,7 @@ exports.findId = async (req, res) => {
   let error = null;
   await axios
     .get(url)
-    .then(result => {
+    .then((result) => {
       data = [
         {
           attraction_id: 0,
@@ -22,18 +22,18 @@ exports.findId = async (req, res) => {
           open_time: "",
           close_time: "",
           attraction_description: "",
-          ward_id: 0
-        }
+          ward_id: 0,
+        },
       ];
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       error = err;
     });
   if (res === "callFunc") return data[0];
   if (error) {
     res.status(500).send({
-      message: "Error retrieving place with place_id " + req.params.placeId
+      message: "Error retrieving place with place_id " + req.params.placeId,
     });
     return;
   }
@@ -52,17 +52,17 @@ exports.findNearby = async (req, res) => {
   let error = null;
   await axios
     .get(url)
-    .then(result => {
+    .then((result) => {
       data = result.data.results;
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       error = err;
     });
   if (res === "callFunc") return data[0];
   if (error) {
     res.status(500).send({
-      message: "Error retrieving place with place_id " + req.params.placeId
+      message: "Error retrieving place with place_id " + req.params.placeId,
     });
     return;
   }
@@ -81,23 +81,24 @@ exports.findPhotoId = async (req, res) => {
   let error = null;
   await axios
     .get(url)
-    .then(result => {
+    .then((result) => {
       data = [
         {
           google_place_id: req.params.placeId,
           attraction_type: result.data.result.types[0],
-          attraction_link: result.data.result.url
-        }
+          attraction_link: result.data.result.url,
+        },
       ];
       photos = result.data.result.photos;
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       error = err;
     });
   if (error) {
     res.status(500).send({
-      message: "Error retrieving image of place with place_id " + req.params.placeId
+      message:
+        "Error retrieving image of place with place_id " + req.params.placeId,
     });
     return;
   }
@@ -127,29 +128,30 @@ exports.findPhotosId = async (req, res) => {
   let error = null;
   await axios
     .get(url)
-    .then(result => {
+    .then((result) => {
       data = [
         {
           google_place_id: req.params.placeId,
           attraction_type: result.data.result.types[0],
-          attraction_link: result.data.result.url
-        }
+          attraction_link: result.data.result.url,
+        },
       ];
       photos = result.data.result.photos;
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       error = err;
     });
   if (error) {
     res.status(500).send({
-      message: "Error retrieving image of place with place_id " + req.params.placeId
+      message:
+        "Error retrieving image of place with place_id " + req.params.placeId,
     });
     return;
   }
   let photoUrls = [];
   if (photos) {
-    photos.map(photo => {
+    photos.map((photo) => {
       let request =
         "https://maps.googleapis.com/maps/api/place/photo?maxwidth=480&photoreference=" +
         photo.photo_reference +
@@ -178,24 +180,24 @@ exports.transport = async (req, res) => {
     res.send({
       distance: {
         text: "10.3 km",
-        value: 10251
+        value: 10251,
       },
       duration: {
         text: "16 mins",
-        value: 940
+        value: 940,
       },
       status: "OK",
-      mode: "Driving"
+      mode: "transit",
     });
     return;
   }
   await axios
     .get(url)
-    .then(result => {
+    .then((result) => {
       console.log("data", result.data);
       data = result.data.rows[0].elements[0];
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       error = err;
     });
@@ -209,23 +211,49 @@ exports.transport = async (req, res) => {
       API_key;
     await axios
       .get(url)
-      .then(result => {
+      .then((result) => {
         console.log("data", result.data);
         data = result.data.rows[0].elements[0];
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         error = err;
       });
   } else {
-    res.send({ ...data, mode: "Public Transport" });
+    res.send({ ...data, mode: "transit" });
+    return;
+  }
+  if (data.status == "ZERO_RESULTS") {
+    url =
+      "https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:" +
+      req.params.originPlaceId +
+      "&destinations=place_id:" +
+      req.params.destinationPlaceId +
+      "&mode=walking&key=" +
+      API_key;
+    await axios
+      .get(url)
+      .then((result) => {
+        console.log("data", result.data);
+        data = result.data.rows[0].elements[0];
+      })
+      .catch((err) => {
+        console.log(err);
+        error = err;
+      });
+  } else {
+    res.send({ ...data, mode: "driving" });
     return;
   }
   if (error) {
     res.status(500).send({
-      message: "Error retrieving image of place with place_id " + req.params.placeId
+      message:
+        "Error retrieving transportation from " +
+        req.params.originPlaceId +
+        " to " +
+        req.params.destinationPlaceId,
     });
     return;
   }
-  res.send({ ...data, mode: "Driving" });
+  res.send({ ...data, mode: "walking" });
 };
