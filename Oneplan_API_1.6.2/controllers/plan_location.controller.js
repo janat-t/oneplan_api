@@ -21,38 +21,6 @@ exports.create = (req, res) => {
   });
 };
 
-exports.findPlanId = (req, res) => {
-  Plan_location.findByPlanId(req.params.planId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_location with plan_id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_location with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
-exports.findCityId = (req, res) => {
-  Plan_location.findByCityId(req.params.cityId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_location with city_id ${req.params.cityId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_location with city_id " + req.params.cityId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
 exports.duplicate = (req, res) => {
   Plan_location.findByPlanId(req.params.planId, (err, data) => {
     if (err) {

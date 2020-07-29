@@ -22,22 +22,6 @@ exports.create = (req, res) => {
   });
 };
 
-exports.findPlanId = (req, res) => {
-  Plan_startday.findByPlanId(req.params.planId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_startday with plan_id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_startday with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
 exports.duplicate = (req, res) => {
   Plan_startday.findByPlanId(req.params.planId, (err, data) => {
     if (err) {

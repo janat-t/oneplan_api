@@ -1,65 +1,165 @@
 const Load_plan = require("../models/load_plan.model.js");
 
-exports.loadAllId = (req, res) => {
-  Load_plan.loadPlanId(req.params.planId, (err, data1) => {
+exports.searchPlanCriteria = (req, res) => {
+  tags = (req.query.tags.replace(/,/g, '","')).split(",")
+  var order = "SELECT plan_overview.plan_id FROM plan_overview " +
+  " INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id " +
+  " INNER JOIN plan_tag_name ON plan_tag.tag_id = plan_tag_name.tag_id " +
+  " INNER JOIN plan_location ON plan_overview.plan_id = plan_location.plan_id WHERE ";
+  if (req.query.planId != -1) {
+	order += " plan_overview.plan_id = " + req.query.planId + " AND "
+  }
+  if (req.query.userId != -1) {
+	order += " user_id = " + req.query.userId + " AND "
+  }
+  if (req.query.budget != -1) {
+	order += " budget = " + req.query.budget + " AND "
+  }
+  if (req.query.cityId != "all") {
+	order += " plan_location.city_id = " + req.query.cityId + " AND "
+  }
+  order += " (duration BETWEEN " +
+      req.query.start +
+      " AND " +
+      req.query.stop +
+      ") AND plan_tag_name.tag_name IN (" +
+      tags +
+      ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, plan_overview.star_rating DESC";
+  
+  Load_plan.execute(order,
+    async (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found plan_overview in city with the current criteria.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving plan_overview in city with the current criteria"
+          });
+        }
+      } else res.send(data);
+    }
+  );
+};
+
+exports.loadSimpleId = (req, res) => {
+  var order = "SELECT * FROM plan_overview " + 
+  " INNER JOIN user ON plan_overview.user_id = user.user_id " + 
+  " INNER JOIN city ON plan_overview.city_id = city.city_id " + 
+  " INNER JOIN country ON city.country_id = country.country_id ";
+  console.log(req.query.planId);
+  if (req.query.planId != "all") {
+	  order += " WHERE plan_overview.plan_id IN ( " + req.query.planId + ") ";
+  }
+  order = order.replace(/"/g,"")
+  console.log(order);
+  Load_plan.execute(order, async (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan with plan_id ${req.params.planId}.`
+          message: `Not found plan.`
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving plan with plan_id " + req.params.planId
+          message: "Error retrieving plan."
         });
       }
-    } else {
-      Load_plan.loadStartDay(req.params.planId, (err, data2) => {
-        if (err) {
-          if (err.kind === "not_found") {
-            res.status(404).send({
-              message: `Not found startday of plan with plan_id ${req.params.planId}.`
-            });
-          } else {
-            res.status(500).send({
-              message: "Error retrieving startday of plan with plan_id " + req.params.planId
-            });
-          }
+    } else res.send(data);
+  }
+  );
+}
+
+exports.loadFullId = (req, res) => {
+  var order1 = "SELECT * FROM plan_overview " + 
+  " INNER JOIN city ON plan_overview.city_id = city.city_id " + 
+  " INNER JOIN country ON city.country_id = country.country_id " +
+  " WHERE plan_overview.plan_id = " + req.query.planId;
+  
+  var order2 = "SELECT * FROM plan_tag WHERE plan_id = " + req.query.planId;
+  
+  var order3 = "SELECT * FROM plan_startday WHERE plan_id = " + req.query.planId + " ORDER BY day";
+  
+  var order4 = "SELECT * FROM attraction " +
+  " INNER JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id " + 
+  " WHERE plan_detail.plan_id = " + req.query.planId + " ORDER BY attraction_order";
+  
+  var order5 = "SELECT * FROM plan_location WHERE plan_id = " + req.query.planId;
+  
+  var order6 = "SELECT * FROM plan_review WHERE plan_id = " + req.query.planId;
+  
+  Load_plan.execute(order1, async (err, data1) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        data1=null;
+      } else {
+        res.status(500).send({
+          message: "Error retrieving plan with plan_id " + req.query.planId
+        });
+      }
+    }
+     Load_plan.execute(order2, async (err, data2) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          data2=null;
         } else {
-          Load_plan.loadDetailId(req.params.planId, (err, data3) => {
-            if (err) {
-              if (err.kind === "not_found") {
-                res.status(404).send({
-                  message: `Not found detail of plan with plan_id ${req.params.planId}.`
-                });
-              } else {
-                res.status(500).send({
-                  message: "Error retrieving detail of plan with plan_id " + req.params.planId
-                });
-              }
-            } else {
-              Load_plan.loadLocation(req.params.planId, (err, data4) => {
-                if (err) {
-                  if (err.kind === "not_found") {
-                    res.status(404).send({
-                      message: `Not found location of plan with plan_id ${req.params.planId}.`
-                    });
-                  } else {
-                    res.status(500).send({
-                      message: "Error retrieving location of plan with plan_id " + req.params.planId
-                    });
-                  }
-                } else
-                  res.send({
-                    plan_overview: data1[0],
-                    plan_startday: data2,
-                    plan_detail: data3,
-                    plan_location: data4
-                  });
-              });
-            }
+          res.status(500).send({
+            message: "Error retrieving startday of plan with plan_id " + req.query.planId
           });
         }
-      });
-    }
+      }
+      Load_plan.execute(order3, async (err, data3) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            data3=null;
+          } else {
+            res.status(500).send({
+              message: "Error retrieving detail of plan with plan_id " + req.query.planI
+            });
+          }
+		}
+        Load_plan.execute(order4, async (err, data4) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                  data4=null;
+                } else {
+                  res.status(500).send({
+                    message: "Error retrieving location of plan with plan_id " + req.query.planId
+                  });
+                }
+            }
+			Load_plan.execute(order5, async (err, data5) => {
+				if (err) {
+					if (err.kind === "not_found") {
+						data5=null;
+					} else {
+						res.status(500).send({
+							message: "Error retrieving location of plan with plan_id " + req.query.planId
+						});
+					}
+				}
+				Load_plan.execute(order6, async (err, data6) => {
+					if (err) {
+						if (err.kind === "not_found") {
+							data6=null;
+						} else {
+							res.status(500).send({
+								message: "Error retrieving location of plan with plan_id " + req.query.planId
+							});
+						}
+					}
+					res.send({
+						plan_overview: data1[0],
+						plan_tag: data2,
+						plan_startday: data3,
+						plan_detail: data4,
+						plan_location: data5,
+						plan_review: data6
+					});
+			    });
+			});
+		  });
+        });
+     });
   });
-};
+}

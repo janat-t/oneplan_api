@@ -9,7 +9,7 @@ exports.create = (req, res) => {
 
   const plan_tag = new Plan_tag({
     plan_id: req.body.plan_id,
-    plan_style: req.body.plan_style,
+    tag_id: req.body.tag_id,
   });
 
   Plan_tag.create(plan_tag, (err, data) => {
@@ -19,39 +19,6 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the plan_tag.",
       });
     else res.send(data);
-  });
-};
-
-exports.findPlanId = (req, res) => {
-  Plan_tag.findByPlanId(req.params.planId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_tag with plan_id ${req.params.planId}.`,
-        });
-      } else {
-        res.status(500).send({
-          message:
-            "Error retrieving plan_tag with plan_id " + req.params.planId,
-        });
-      }
-    } else res.send(data);
-  });
-};
-
-exports.findStyle = (req, res) => {
-  Plan_tag.findByStyle(req.params.style, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_tag with style ${req.params.style}.`,
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_tag with style " + req.params.style,
-        });
-      }
-    } else res.send(data);
   });
 };
 

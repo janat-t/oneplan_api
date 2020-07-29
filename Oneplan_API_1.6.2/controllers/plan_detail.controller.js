@@ -27,16 +27,6 @@ exports.create = (req, res) => {
   });
 };
 
-exports.findPlanId = (req, res) => {
-  Plan_detail.findByPlanId(req.params.planId, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message: "Error retrieving plan_detail with plan_id " + req.params.planId
-      });
-    } else res.send(data);
-  });
-};
-
 exports.duplicate = (req, res) => {
   Plan_detail.findByPlanId(req.params.planId, (err, data) => {
     if (err) {

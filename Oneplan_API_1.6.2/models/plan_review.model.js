@@ -19,61 +19,6 @@ Plan_review.create = (newPlan, result) => {
   });
 };
 
-Plan_review.findById = (id, result) => {
-  sql.query(
-    `SELECT * FROM plan_review WHERE review_id = ${id}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found plan_review: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
-Plan_review.findByPlanId = (id, result) => {
-  sql.query(
-    `SELECT * FROM plan_review WHERE plan_id = ${id} ORDER BY updated_time DESC`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found plan_review: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
-Plan_review.getAll = result => {
-  sql.query("SELECT * FROM plan_review", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("plan_review: ", res);
-    result(null, res);
-  });
-};
-
 Plan_review.updateById = (id, plan_review, result) => {
   sql.query(
     "UPDATE plan_review SET plan_id = ?, rating = ?, review = ? WHERE review_id = ?",

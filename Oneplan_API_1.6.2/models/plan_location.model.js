@@ -18,42 +18,6 @@ Plan_location.create = (newPlan, result) => {
   });
 };
 
-Plan_location.findByPlanId = (id, result) => {
-  sql.query(`SELECT * FROM plan_location WHERE plan_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found plan_location: ", res);
-      result(null, res);
-      return;
-    }
-
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Plan_location.findByCityId = (id, result) => {
-  sql.query(`SELECT * FROM plan_location WHERE city_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found plan_location: ", res);
-      result(null, res);
-      return;
-    }
-
-    result({ kind: "not_found" }, null);
-  });
-};
-
 Plan_location.removePlanId = (id, result) => {
   sql.query("DELETE FROM plan_location WHERE plan_id = ?", id, (err, res) => {
     if (err) {
