@@ -27,7 +27,7 @@ exports.searchPlanCriteria = (req, res) => {
       ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, plan_overview.star_rating DESC";
   
   Load_plan.execute(order,
-    async (err, data) => {
+     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
@@ -54,7 +54,7 @@ exports.loadSimpleId = (req, res) => {
   }
   order = order.replace(/"/g,"")
   console.log(order);
-  Load_plan.execute(order, async (err, data) => {
+  Load_plan.execute(order,  (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -71,24 +71,26 @@ exports.loadSimpleId = (req, res) => {
 }
 
 exports.loadFullId = (req, res) => {
-  var order1 = "SELECT * FROM plan_overview " + 
-  " INNER JOIN city ON plan_overview.city_id = city.city_id " + 
+  var order1 = "SELECT * FROM plan_overview WHERE plan_overview.plan_id = " + req.query.planId;
+  
+  var order2 = "SELECT * FROM plan_location " +
+  " INNER JOIN city ON plan_location.city_id = city.city_id " +
   " INNER JOIN country ON city.country_id = country.country_id " +
-  " WHERE plan_overview.plan_id = " + req.query.planId;
+  " WHERE plan_location.plan_id = " + req.query.planId;
   
-  var order2 = "SELECT * FROM plan_tag WHERE plan_id = " + req.query.planId;
+  var order3 = "SELECT * FROM plan_tag WHERE plan_id = " + req.query.planId;
   
-  var order3 = "SELECT * FROM plan_startday WHERE plan_id = " + req.query.planId + " ORDER BY day";
+  var order4 = "SELECT * FROM plan_startday WHERE plan_id = " + req.query.planId + " ORDER BY day";
   
-  var order4 = "SELECT * FROM attraction " +
+  var order5 = "SELECT * FROM attraction " +
   " INNER JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id " + 
   " WHERE plan_detail.plan_id = " + req.query.planId + " ORDER BY attraction_order";
   
-  var order5 = "SELECT * FROM plan_location WHERE plan_id = " + req.query.planId;
+  var order6 = "SELECT * FROM plan_location WHERE plan_id = " + req.query.planId;
   
-  var order6 = "SELECT * FROM plan_review WHERE plan_id = " + req.query.planId;
+  var order7 = "SELECT * FROM plan_review WHERE plan_id = " + req.query.planId;
   
-  Load_plan.execute(order1, async (err, data1) => {
+  Load_plan.execute(order1,  (err, data1) => {
     if (err) {
       if (err.kind === "not_found") {
         data1=null;
@@ -98,7 +100,7 @@ exports.loadFullId = (req, res) => {
         });
       }
     }
-     Load_plan.execute(order2, async (err, data2) => {
+     Load_plan.execute(order2,  (err, data2) => {
       if (err) {
         if (err.kind === "not_found") {
           data2=null;
@@ -108,7 +110,7 @@ exports.loadFullId = (req, res) => {
           });
         }
       }
-      Load_plan.execute(order3, async (err, data3) => {
+      Load_plan.execute(order3,  (err, data3) => {
         if (err) {
           if (err.kind === "not_found") {
             data3=null;
@@ -118,7 +120,7 @@ exports.loadFullId = (req, res) => {
             });
           }
 		}
-        Load_plan.execute(order4, async (err, data4) => {
+        Load_plan.execute(order4,  (err, data4) => {
             if (err) {
                 if (err.kind === "not_found") {
                   data4=null;
@@ -128,7 +130,7 @@ exports.loadFullId = (req, res) => {
                   });
                 }
             }
-			Load_plan.execute(order5, async (err, data5) => {
+			Load_plan.execute(order5,  (err, data5) => {
 				if (err) {
 					if (err.kind === "not_found") {
 						data5=null;
@@ -138,7 +140,7 @@ exports.loadFullId = (req, res) => {
 						});
 					}
 				}
-				Load_plan.execute(order6, async (err, data6) => {
+				Load_plan.execute(order6,  (err, data6) => {
 					if (err) {
 						if (err.kind === "not_found") {
 							data6=null;
@@ -148,13 +150,25 @@ exports.loadFullId = (req, res) => {
 							});
 						}
 					}
-					res.send({
-						plan_overview: data1[0],
-						plan_tag: data2,
-						plan_startday: data3,
-						plan_detail: data4,
-						plan_location: data5,
-						plan_review: data6
+					Load_plan.execute(order7,  (err, data7) => {
+						if (err) {
+							if (err.kind === "not_found") {
+								data7=null;
+							} else {
+								res.status(500).send({
+									message: "Error retrieving location of plan with plan_id " + req.query.planId
+								});
+							}
+						}
+						res.send({
+							plan_overview: data1[0],
+							plan_city: data2,
+							plan_tag: data3,
+							plan_startday: data4,
+							plan_detail: data5,
+							plan_location: data6,
+							plan_review: data7
+						});
 					});
 			    });
 			});
