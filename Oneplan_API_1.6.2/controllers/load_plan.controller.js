@@ -106,13 +106,9 @@ exports.loadFullId = (req, res) => {
 
   Load_plan.execute(order1, (err, data1) => {
     if (err) {
-      if (err.kind === "not_found") {
-        data1 = null;
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan with plan_id " + req.query.planId,
-        });
-      }
+      res.status(500).send({
+        message: "Error retrieving plan with plan_id " + req.query.planId,
+      });
     }
     Load_plan.execute(order2, (err, data2) => {
       if (err) {
