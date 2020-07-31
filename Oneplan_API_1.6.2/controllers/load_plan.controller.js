@@ -109,6 +109,7 @@ exports.loadFullId = (req, res) => {
       res.status(500).send({
         message: "Error retrieving plan with plan_id " + req.query.planId,
       });
+      return;
     }
     Load_plan.execute(order2, (err, data2) => {
       if (err) {
@@ -120,6 +121,7 @@ exports.loadFullId = (req, res) => {
               "Error retrieving startday of plan with plan_id " +
               req.query.planId,
           });
+          return;
         }
       }
       Load_plan.execute(order3, (err, data3) => {
@@ -132,6 +134,7 @@ exports.loadFullId = (req, res) => {
                 "Error retrieving detail of plan with plan_id " +
                 req.query.planI,
             });
+            return;
           }
         }
         Load_plan.execute(order4, (err, data4) => {
@@ -144,6 +147,7 @@ exports.loadFullId = (req, res) => {
                   "Error retrieving location of plan with plan_id " +
                   req.query.planId,
               });
+              return;
             }
           }
           Load_plan.execute(order5, (err, data5) => {
@@ -156,6 +160,7 @@ exports.loadFullId = (req, res) => {
                     "Error retrieving location of plan with plan_id " +
                     req.query.planId,
                 });
+                return;
               }
             }
             Load_plan.execute(order6, (err, data6) => {
@@ -168,6 +173,7 @@ exports.loadFullId = (req, res) => {
                       "Error retrieving location of plan with plan_id " +
                       req.query.planId,
                   });
+                  return;
                 }
               }
               Load_plan.execute(order7, (err, data7) => {
@@ -180,6 +186,7 @@ exports.loadFullId = (req, res) => {
                         "Error retrieving location of plan with plan_id " +
                         req.query.planId,
                     });
+                    return;
                   }
                 }
                 res.send({
