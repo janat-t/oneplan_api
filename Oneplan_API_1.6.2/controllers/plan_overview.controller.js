@@ -3,7 +3,7 @@ const Plan_overview = require("../models/plan_overview.model.js");
 exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
-      message: "Content can not be empty."
+      message: "Content can not be empty.",
     });
   }
 
@@ -11,23 +11,27 @@ exports.create = (req, res) => {
     plan_title: req.body.plan_title,
     user_id: req.body.user_id,
     duration: req.body.duration,
-	budget: req.body.budget,
+    budget: req.body.budget,
     plan_description: req.body.plan_description,
     original_id: req.body.original_id,
     available: req.body.available,
-    star_rating: req.body.star_rating
+    star_rating: req.body.star_rating,
   });
 
   Plan_overview.create(plan_overview, (err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the plan_overview."
+        message:
+          err.message ||
+          "Some error occurred while creating the plan_overview.",
       });
     else {
       Plan_overview.auto_tag_insert(data.id, (err, data2) => {
         if (err)
           res.status(500).send({
-            message: err.message || "Some error occurred while creating the plan_overview."
+            message:
+              err.message ||
+              "Some error occurred while creating the plan_overview.",
           });
         else res.send(data2);
       });
@@ -38,23 +42,28 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({
-      message: "Content can not be empty."
+      message: "Content can not be empty.",
     });
   }
 
-  Plan_overview.updateById(req.params.planId, new Plan_overview(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found Plan_overview with id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error updating plan_overview with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
+  Plan_overview.updateById(
+    req.params.planId,
+    new Plan_overview(req.body),
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Plan_overview with id ${req.params.planId}.`,
+          });
+        } else {
+          res.status(500).send({
+            message:
+              "Error updating plan_overview with plan_id " + req.params.planId,
+          });
+        }
+      } else res.send(data);
+    }
+  );
 };
 
 exports.delete = (req, res) => {
@@ -62,16 +71,17 @@ exports.delete = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan_overview with plan_id ${req.params.planId}.`
+          message: `Not found plan_overview with plan_id ${req.params.planId}.`,
         });
       } else {
         res.status(500).send({
-          message: "Could not delete plan_overview with plan_id " + req.params.planId
+          message:
+            "Could not delete plan_overview with plan_id " + req.params.planId,
         });
       }
     } else
       res.send({
-        message: `Plan_overview with plan_id ${req.params.planId} was deleted successfully!`
+        message: `Plan_overview with plan_id ${req.params.planId} was deleted successfully!`,
       });
   });
 };
@@ -81,11 +91,12 @@ exports.duplicate = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan_overview with plan_id ${req.params.planId}.`
+          message: `Not found plan_overview with plan_id ${req.params.planId}.`,
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving plan_overview with plan_id " + req.params.planId
+          message:
+            "Error retrieving plan_overview with plan_id " + req.params.planId,
         });
       }
     } else {
@@ -93,11 +104,11 @@ exports.duplicate = (req, res) => {
         plan_title: data[0].plan_title,
         user_id: req.params.userId,
         duration: data[0].duration,
-		budget: data[0].budget,
+        budget: data[0].budget,
         plan_description: data[0].plan_description,
         original_id: req.params.planId,
         available: data[0].available,
-        star_rating: data[0].star_rating
+        star_rating: data[0].star_rating,
       });
       Plan_overview.create(plan_overview, (err, data2) => {
         if (err)
@@ -105,7 +116,7 @@ exports.duplicate = (req, res) => {
             message:
               err.message ||
               "Some error occurred while duplicating the plan_overview with plan_id " +
-                req.params.planId
+                req.params.planId,
           });
         else res.send(data2);
       });

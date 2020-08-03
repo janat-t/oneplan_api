@@ -80,9 +80,9 @@ exports.loadFullId = (req, res) => {
 
   var order2 =
     "SELECT * FROM plan_location " +
-    " INNER JOIN city ON plan_location.city_id = city.city_id " +
-    " INNER JOIN country ON city.country_id = country.country_id " +
-    " WHERE plan_location.plan_id = " +
+    "INNER JOIN city ON plan_location.city_id = city.city_id " +
+    "INNER JOIN country ON city.country_id = country.country_id " +
+    "WHERE plan_location.plan_id = " +
     req.query.planId;
 
   var order3 = "SELECT * FROM plan_tag WHERE plan_id = " + req.query.planId;
@@ -94,8 +94,8 @@ exports.loadFullId = (req, res) => {
 
   var order5 =
     "SELECT * FROM attraction " +
-    " INNER JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id " +
-    " WHERE plan_detail.plan_id = " +
+    "INNER JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id " +
+    "WHERE plan_detail.plan_id = " +
     req.query.planId +
     " ORDER BY attraction_order";
 
@@ -107,18 +107,19 @@ exports.loadFullId = (req, res) => {
   Load_plan.execute(order1, (err, data1) => {
     if (err) {
       res.status(500).send({
-        message: "Error retrieving plan with plan_id " + req.query.planId,
+        message:
+          "Error retrieving plan_overview with plan_id " + req.query.planId,
       });
       return;
     }
     Load_plan.execute(order2, (err, data2) => {
       if (err) {
         if (err.kind === "not_found") {
-          data2 = null;
+          data2 = [];
         } else {
           res.status(500).send({
             message:
-              "Error retrieving startday of plan with plan_id " +
+              "Error retrieving plan_city of plan with plan_id " +
               req.query.planId,
           });
           return;
@@ -127,11 +128,11 @@ exports.loadFullId = (req, res) => {
       Load_plan.execute(order3, (err, data3) => {
         if (err) {
           if (err.kind === "not_found") {
-            data3 = null;
+            data3 = [];
           } else {
             res.status(500).send({
               message:
-                "Error retrieving detail of plan with plan_id " +
+                "Error retrieving plan_tag of plan with plan_id " +
                 req.query.planI,
             });
             return;
@@ -140,11 +141,11 @@ exports.loadFullId = (req, res) => {
         Load_plan.execute(order4, (err, data4) => {
           if (err) {
             if (err.kind === "not_found") {
-              data4 = null;
+              data4 = [];
             } else {
               res.status(500).send({
                 message:
-                  "Error retrieving location of plan with plan_id " +
+                  "Error retrieving plan_startday of plan with plan_id " +
                   req.query.planId,
               });
               return;
@@ -153,11 +154,11 @@ exports.loadFullId = (req, res) => {
           Load_plan.execute(order5, (err, data5) => {
             if (err) {
               if (err.kind === "not_found") {
-                data5 = null;
+                data5 = [];
               } else {
                 res.status(500).send({
                   message:
-                    "Error retrieving location of plan with plan_id " +
+                    "Error retrieving plan_details of plan with plan_id " +
                     req.query.planId,
                 });
                 return;
@@ -170,7 +171,7 @@ exports.loadFullId = (req, res) => {
                 } else {
                   res.status(500).send({
                     message:
-                      "Error retrieving location of plan with plan_id " +
+                      "Error retrieving plan_location of plan with plan_id " +
                       req.query.planId,
                   });
                   return;
@@ -179,11 +180,11 @@ exports.loadFullId = (req, res) => {
               Load_plan.execute(order7, (err, data7) => {
                 if (err) {
                   if (err.kind === "not_found") {
-                    data7 = null;
+                    data7 = [];
                   } else {
                     res.status(500).send({
                       message:
-                        "Error retrieving location of plan with plan_id " +
+                        "Error retrieving plan_review of plan with plan_id " +
                         req.query.planId,
                     });
                     return;

@@ -27,7 +27,7 @@ Plan_overview.create = (newPlan, result) => {
 
 Plan_overview.auto_tag_insert = (id, result) => {
   sql.query(
-    "INSERT INTO plan_tag (plan_id,plan_style) VALUE (?,?)",
+    "INSERT INTO plan_tag (plan_id,tag_id) VALUE (?,?)",
     [id, 0],
     (err, res) => {
       if (err) {
@@ -48,12 +48,12 @@ Plan_overview.updateById = (id, plan_overview, result) => {
       plan_overview.plan_title,
       plan_overview.user_id,
       plan_overview.duration,
-	  plan_overview.budget,
+      plan_overview.budget,
       plan_overview.plan_description,
       plan_overview.original_id,
       plan_overview.available,
       plan_overview.star_rating,
-      id
+      id,
     ],
     (err, res) => {
       if (err) {
