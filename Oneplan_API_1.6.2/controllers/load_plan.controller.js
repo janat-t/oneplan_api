@@ -1,7 +1,10 @@
 const Load_plan = require("../models/load_plan.model.js");
 
 exports.searchPlanCriteria = (req, res) => {
-  var tags = ('"' + req.query.tags.replace(/,/g, '","') + '"').split(",");
+  if (!req.query) {
+    res.status(404).send({ message: "Query must be include" });
+    return;
+  }
   var order =
     "SELECT * FROM plan_overview " +
     " INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id " +
@@ -25,21 +28,24 @@ exports.searchPlanCriteria = (req, res) => {
   if (req.query.stop) {
     order += " duration <= " + req.query.stop + " AND";
   }
+  if (req.query.tags) {
+    var tags = ('"' + req.query.tags.replace(/,/g, '","') + '"').split(",");
+    order += " plan_tab_name.tagname IN (" + tags + ") AND";
+  }
+  order = order.slice(0, -4);
   order +=
-    " plan_tag_name.tag_name IN (" +
-    tags +
-    ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, plan_overview.star_rating DESC";
-
+    " GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, plan_overview.star_rating DESC";
+  console.log(order);
   Load_plan.execute(order, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan_overview in city with the current criteria.`,
+          message: `Not found plan_overview in with the current criteria.`,
         });
       } else {
         res.status(500).send({
           message:
-            "Error retrieving plan_overview in city with the current criteria",
+            "Error retrieving plan_overview in with the current criteria",
         });
       }
     } else res.send(data);
