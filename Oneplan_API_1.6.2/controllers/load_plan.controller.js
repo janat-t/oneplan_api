@@ -30,12 +30,12 @@ exports.searchPlanCriteria = (req, res) => {
   }
   if (req.query.tags) {
     var tags = ('"' + req.query.tags.replace(/,/g, '","') + '"').split(",");
-    order += " plan_tab_name.tagname IN (" + tags + ") AND";
+    order += " plan_tag_name.tag_name IN (" + tags + ") AND";
   }
   order = order.slice(0, -4);
   order +=
     " GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, plan_overview.star_rating DESC";
-  console.log(order);
+  // console.log(order);
   Load_plan.execute(order, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
