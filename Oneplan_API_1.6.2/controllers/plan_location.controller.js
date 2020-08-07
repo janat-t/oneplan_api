@@ -56,6 +56,33 @@ exports.duplicate = (req, res) => {
   });
 };
 
+exports.update = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty.",
+    });
+  }
+
+  Plan_location.updateById(
+    req.params.planId,
+    new Plan_location(req.body),
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Plan_location with id ${req.params.planId}.`,
+          });
+        } else {
+          res.status(500).send({
+            message:
+              "Error updating plan_location with plan_id " + req.params.planId,
+          });
+        }
+      } else res.send(data);
+    }
+  );
+};
+
 exports.deletePlanId = (req, res) => {
   Plan_location.removePlanId(req.params.planId, (err, data) => {
     if (err) {

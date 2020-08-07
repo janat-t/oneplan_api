@@ -72,4 +72,30 @@ Plan_location.removeCityId = (id, result) => {
   });
 };
 
+Plan_location.updateById = (id, plan_location, result) => {
+  sql.query(
+    "UPDATE plan_location SET plan_id = ?, city_id = ? WHERE plan_id = ?",
+    [
+      plan_location.plan_id,
+      plan_location.city_id,
+      id,
+    ],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated plan_location: ", { id: id, ...plan_location });
+      result(null, { id: id, ...plan_location });
+    }
+  );
+};
+
 module.exports = Plan_location;
