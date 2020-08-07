@@ -25,6 +25,24 @@ Plan_overview.create = (newPlan, result) => {
   });
 };
 
+Plan_overview.findById = (id, result) => {
+  sql.query(`SELECT * FROM plan_overview WHERE plan_id = ${id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found plan_overview: ", res);
+      result(null, res);
+      return;
+    }
+
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Plan_overview.auto_tag_insert = (id, result) => {
   sql.query(
     "INSERT INTO plan_tag (plan_id,tag_id) VALUE (?,?)",
