@@ -14,7 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 require("./routes/city.routes.js")(app);
-require("./routes/user.routes.js")(app);
 require("./routes/plan_overview.routes.js")(app);
 require("./routes/attraction.routes.js")(app);
 require("./routes/country.routes.js")(app);
