@@ -2,7 +2,7 @@ module.exports = app => {
 	const load_plan = require("../controllers/load_plan.controller.js");
 	app.get("/api/load_plan/search", load_plan.searchPlanCriteria, function(req, res) {
 	 var planId = req.query.planId;
-	 var userId = req.query.username;
+	 var userId = req.query.userId;
 	 var cityId = req.query.cityId;
 	 var start = req.query.start;
 	 var stop = req.query.stop;
