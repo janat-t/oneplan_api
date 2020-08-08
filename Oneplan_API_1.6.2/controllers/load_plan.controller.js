@@ -14,7 +14,7 @@ exports.searchPlanCriteria = (req, res) => {
     order += " plan_overview.plan_id = " + req.query.planId + " AND";
   }
   if (req.query.userId) {
-    order += " user_id = " + req.query.userId + " AND";
+    order += ' user_id = "' + req.query.userId + '" AND';
   }
   if (req.query.budget) {
     order += " budget = " + req.query.budget + " AND";
