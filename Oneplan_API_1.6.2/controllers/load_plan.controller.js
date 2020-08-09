@@ -7,9 +7,9 @@ exports.searchPlanCriteria = (req, res) => {
   }
   var order =
     "SELECT * FROM plan_overview " +
-    " INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id " +
-    " INNER JOIN plan_tag_name ON plan_tag.tag_id = plan_tag_name.tag_id " +
-    " INNER JOIN plan_location ON plan_overview.plan_id = plan_location.plan_id WHERE";
+    " LEFT JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id " +
+    " LEFT JOIN plan_tag_name ON plan_tag.tag_id = plan_tag_name.tag_id " +
+    " LEFT JOIN plan_location ON plan_overview.plan_id = plan_location.plan_id WHERE";
   if (req.query.planId) {
     order += " plan_overview.plan_id = " + req.query.planId + " AND";
   }
@@ -35,7 +35,7 @@ exports.searchPlanCriteria = (req, res) => {
   order = order.slice(0, -4);
   order +=
     " GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, plan_overview.star_rating DESC";
-  // console.log(order);
+   console.log(order);
   Load_plan.execute(order, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
@@ -55,9 +55,9 @@ exports.searchPlanCriteria = (req, res) => {
 exports.loadSimpleId = (req, res) => {
   var order =
     "SELECT * FROM plan_overview " +
-    " INNER JOIN user ON plan_overview.user_id = user.user_id " +
-    " INNER JOIN city ON plan_overview.city_id = city.city_id " +
-    " INNER JOIN country ON city.country_id = country.country_id ";
+    " LEFT JOIN user ON plan_overview.user_id = user.user_id " +
+    " LEFT JOIN city ON plan_overview.city_id = city.city_id " +
+    " LEFT JOIN country ON city.country_id = country.country_id ";
   console.log(req.query.planId);
   if (req.query.planId != "all") {
     order += " WHERE plan_overview.plan_id IN ( " + req.query.planId + ") ";
@@ -86,8 +86,8 @@ exports.loadFullId = (req, res) => {
 
   var order2 =
     "SELECT * FROM plan_location " +
-    "INNER JOIN city ON plan_location.city_id = city.city_id " +
-    "INNER JOIN country ON city.country_id = country.country_id " +
+    "LEFT JOIN city ON plan_location.city_id = city.city_id " +
+    "LEFT JOIN country ON city.country_id = country.country_id " +
     "WHERE plan_location.plan_id = " +
     req.query.planId;
 
@@ -100,7 +100,7 @@ exports.loadFullId = (req, res) => {
 
   var order5 =
     "SELECT * FROM attraction " +
-    "INNER JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id " +
+    "LEFT JOIN plan_detail ON plan_detail.attraction_id = attraction.attraction_id " +
     "WHERE plan_detail.plan_id = " +
     req.query.planId +
     " ORDER BY attraction_order";

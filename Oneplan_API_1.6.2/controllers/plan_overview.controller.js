@@ -108,7 +108,7 @@ exports.duplicate = (req, res) => {
         plan_description: data[0].plan_description,
         original_id: req.params.planId,
         available: data[0].available,
-        star_rating: data[0].star_rating,
+        star_rating: data[0].star_rating
       });
       Plan_overview.create(plan_overview, (err, data2) => {
         if (err)
