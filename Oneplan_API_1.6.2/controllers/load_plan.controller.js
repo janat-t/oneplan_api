@@ -50,7 +50,7 @@ exports.searchPlanCriteria = (req, res) => {
       }
     } else{
 		for(let i=0;i<data.length;i++){
-			data[i].contributor=data[i].contributor.split(",");
+			if(data[i].contributor) data[i].contributor=data[i].contributor.split(",");
 		}
 		res.send(data);
 	}
