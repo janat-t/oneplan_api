@@ -55,7 +55,6 @@ Plan_overview.updateById = (id, plan_overview, result) => {
       plan_overview.original_id,
       plan_overview.available,
       plan_overview.star_rating,
-      plan_overview.star_rating,
       id,
     ],
     (err, res) => {
