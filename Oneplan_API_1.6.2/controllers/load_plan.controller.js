@@ -131,8 +131,8 @@ exports.loadFullId = (req, res) => {
     " ORDER BY day";
 
   var order5 =
-    "SELECT * FROM attraction " +
-    "LEFT JOIN plan_detail ON plan_detail.google_place_id = attraction.google_place_id " +
+    "SELECT * FROM plan_detail " +
+    "LEFT JOIN attraction ON plan_detail.google_place_id = attraction.google_place_id " +
     "WHERE plan_detail.plan_id = " +
     req.query.planId +
     " ORDER BY attraction_order";
