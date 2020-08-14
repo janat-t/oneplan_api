@@ -1,4 +1,5 @@
 const Plan_detail = require("../models/plan_detail.model.js");
+const Attraction = require("../models/attraction.model.js");
 exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
@@ -104,7 +105,25 @@ exports.updateOne = (req, res) => {
       message: "Content can not be empty."
     });
   }
-
+  Attraction.findByGoogleId(req.body.google_place_id, async (err, dummy) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        const attraction = new Attraction({
+			google_place_id: req.body.google_place_id
+		});
+		Attraction.create(attraction, (err, dummy2) => {
+			if (err)
+			res.status(500).send({
+				message: err.message || "Some error occurred while creating the attraction."
+			});
+		});
+      } else {
+        res.status(500).send({
+          message: "Error retrieving the attraction with google_place_id " + req.params.attractionId
+        });
+      }
+    }
+  });
   Plan_detail.updateByIdOne(
     req.params.planId,
     req.params.order,
