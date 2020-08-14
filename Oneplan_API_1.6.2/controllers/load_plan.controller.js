@@ -48,7 +48,12 @@ exports.searchPlanCriteria = (req, res) => {
             "Error retrieving plan_overview in with the current criteria",
         });
       }
-    } else res.send(data);
+    } else{
+		for(let i=0;i<data.length;i++){
+			data[i].contributor=data[i].contributor.split(",");
+		}
+		res.send(data);
+	}
   });
 };
 
