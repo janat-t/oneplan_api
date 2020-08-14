@@ -84,6 +84,33 @@ exports.loadSimpleId = (req, res) => {
   });
 };
 
+exports.loadSimpleId = (req, res) => {
+  var order =
+    "SELECT * FROM plan_overview " +
+    " LEFT JOIN user ON plan_overview.user_id = user.user_id " +
+    " LEFT JOIN city ON plan_overview.city_id = city.city_id " +
+    " LEFT JOIN country ON city.country_id = country.country_id ";
+  console.log(req.query.planId);
+  if (req.query.planId != "all") {
+    order += " WHERE plan_overview.plan_id IN ( " + req.query.planId + ") ";
+  }
+  order = order.replace(/"/g, "");
+  console.log(order);
+  Load_plan.execute(order, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found plan.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving plan.",
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 exports.loadFullId = (req, res) => {
   var order1 =
     "SELECT * FROM plan_overview WHERE plan_overview.plan_id = " +
@@ -104,9 +131,16 @@ exports.loadFullId = (req, res) => {
     " ORDER BY day";
 
   var order5 =
+    "SELECT * FROM attraction " +
+    "LEFT JOIN plan_detail ON plan_detail.google_place_id = attraction.google_place_id " +
+    "WHERE plan_detail.plan_id = " +
+    req.query.planId +
+    " ORDER BY attraction_order";
+
+  var order6 =
     "SELECT * FROM plan_location WHERE plan_id = " + req.query.planId;
 
-  var order6 = "SELECT * FROM plan_review WHERE plan_id = " + req.query.planId;
+  var order7 = "SELECT * FROM plan_review WHERE plan_id = " + req.query.planId;
 
   Load_plan.execute(order1, (err, data1) => {
     if (err) {
@@ -181,13 +215,27 @@ exports.loadFullId = (req, res) => {
                   return;
                 }
               }
+              Load_plan.execute(order7, (err, data7) => {
+                if (err) {
+                  if (err.kind === "not_found") {
+                    data7 = [];
+                  } else {
+                    res.status(500).send({
+                      message:
+                        "Error retrieving plan_review of plan with plan_id " +
+                        req.query.planId,
+                    });
+                    return;
+                  }
+                }
                 res.send({
                   plan_overview: data1[0],
                   plan_city: data2,
                   plan_tag: data3,
                   plan_startday: data4,
-                  plan_location: data5,
-                  plan_review: data6,
+                  plan_detail: data5,
+                  plan_location: data6,
+                  plan_review: data7,
                 });
               });
             });
@@ -195,4 +243,5 @@ exports.loadFullId = (req, res) => {
         });
       });
     });
-  };
+  });
+};
