@@ -36,24 +36,6 @@ Plan_location.findByPlanId = (id, result) => {
   });
 };
 
-Plan_location.findByCityId = (id, result) => {
-  sql.query(`SELECT * FROM plan_location WHERE city_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found plan_location: ", res);
-      result(null, res);
-      return;
-    }
-
-    result({ kind: "not_found" }, null);
-  });
-};
-
 Plan_location.removePlanId = (id, result) => {
   sql.query("DELETE FROM plan_location WHERE plan_id = ?", id, (err, res) => {
     if (err) {
@@ -88,6 +70,32 @@ Plan_location.removeCityId = (id, result) => {
     console.log("deleted plan_location with city_id: ", id);
     result(null, res);
   });
+};
+
+Plan_location.updateById = (id, plan_location, result) => {
+  sql.query(
+    "UPDATE plan_location SET plan_id = ?, city_id = ? WHERE plan_id = ?",
+    [
+      plan_location.plan_id,
+      plan_location.city_id,
+      id,
+    ],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated plan_location: ", { id: id, ...plan_location });
+      result(null, { id: id, ...plan_location });
+    }
+  );
 };
 
 module.exports = Plan_location;

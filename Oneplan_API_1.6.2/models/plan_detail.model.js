@@ -26,19 +26,21 @@ Plan_detail.create = (newPlan, result) => {
 };
 
 Plan_detail.findByPlanId = (id, result) => {
-  sql.query(
-    `SELECT * FROM plan_detail WHERE plan_id = ${id} ORDER BY day, attraction_order`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
+  sql.query(`SELECT * FROM plan_detail WHERE plan_id = ${id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
       console.log("found plan_detail: ", res);
       result(null, res);
       return;
     }
-  );
+
+    result({ kind: "not_found" }, null);
+  });
 };
 
 Plan_detail.removePlanIdAll = (id, result) => {

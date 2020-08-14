@@ -20,15 +20,20 @@ Plan_startday.create = (newPlan, result) => {
 };
 
 Plan_startday.findByPlanId = (id, result) => {
-  sql.query(`SELECT * FROM plan_startday WHERE plan_id = ${id} ORDER BY day`, (err, res) => {
+  sql.query(`SELECT * FROM plan_startday WHERE plan_id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-    console.log("found plan_startday: ", res);
-    result(null, res);
-    return;
+
+    if (res.length) {
+      console.log("found plan_startday: ", res);
+      result(null, res);
+      return;
+    }
+
+    result({ kind: "not_found" }, null);
   });
 };
 

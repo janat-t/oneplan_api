@@ -4,8 +4,9 @@ const Plan_overview = function (plan_overview) {
   this.plan_id = plan_overview.plan_id;
   this.plan_title = plan_overview.plan_title;
   this.user_id = plan_overview.user_id;
-  this.city_id = plan_overview.city_id;
+  this.contributor = plan_overview.contributor;
   this.duration = plan_overview.duration;
+  this.budget = plan_overview.budget;
   this.plan_description = plan_overview.plan_description;
   this.original_id = plan_overview.original_id;
   this.available = plan_overview.available;
@@ -25,10 +26,28 @@ Plan_overview.create = (newPlan, result) => {
   });
 };
 
+Plan_overview.findById = (id, result) => {
+  sql.query(`SELECT * FROM plan_overview WHERE plan_id = ${id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found plan_overview: ", res);
+      result(null, res);
+      return;
+    }
+
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Plan_overview.auto_tag_insert = (id, result) => {
   sql.query(
-    "INSERT INTO plan_tag (plan_id,plan_style) VALUE (?,?)",
-    [id, "AUTO_TAG"],
+    "INSERT INTO plan_tag (plan_id,tag_id) VALUE (?,?)",
+    [id, 0],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -41,137 +60,21 @@ Plan_overview.auto_tag_insert = (id, result) => {
   );
 };
 
-Plan_overview.findById = (id, result) => {
-  sql.query(
-    `SELECT * FROM plan_overview
-  INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id
-  WHERE plan_overview.plan_id = ${id}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found plan_overview: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
-Plan_overview.findByUser = (id, result) => {
-  sql.query(
-    `SELECT * FROM plan_overview
-  INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id
-  WHERE user_id = ${id}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found plan_overview: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
-Plan_overview.findByCriteria = (id, start, stop, result) => {
-  sql.query(
-    "SELECT plan_id FROM plan_overview WHERE city_id = ? AND (duration BETWEEN ? AND ?)",
-    [id, start, stop],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found plan_overview: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
-Plan_overview.findByCriteriaTag = (id, start, stop, tags, result) => {
-  if (id === "all")
-    var q =
-      "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE (duration BETWEEN " +
-      start +
-      " AND " +
-      stop +
-      ") AND plan_style IN (" +
-      tags +
-      ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, star_rating DESC";
-  else
-    var q =
-      "SELECT * FROM plan_overview INNER JOIN plan_tag ON plan_overview.plan_id = plan_tag.plan_id WHERE city_id = " +
-      id +
-      " AND (duration BETWEEN " +
-      start +
-      " AND " +
-      stop +
-      ") AND plan_style IN (" +
-      tags +
-      ") GROUP BY plan_overview.plan_id ORDER BY count(plan_overview.plan_id) DESC, star_rating DESC";
-  console.log(q);
-  sql.query(q, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-    if (res.length) {
-      console.log("found plan_overview match criteria: ", res);
-      result(null, res);
-      return;
-    }
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Plan_overview.getAll = result => {
-  sql.query("SELECT * FROM plan_overview", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("plan_overview: ", res);
-    result(null, res);
-  });
-};
-
 Plan_overview.updateById = (id, plan_overview, result) => {
   sql.query(
-    "UPDATE plan_overview SET plan_title = ?, user_id = ?, city_id = ?, duration = ?, plan_description = ?, original_id = ?, available = ?, star_rating = ? WHERE plan_id = ?",
+    "UPDATE plan_overview SET plan_title = ?, user_id = ?, contributor = ?, duration = ?, budget = ?, plan_description = ?, original_id = ?, available = ?, star_rating = ? WHERE plan_id = ?",
     [
       plan_overview.plan_title,
       plan_overview.user_id,
-      plan_overview.city_id,
+	  plan_overview.contributor,
       plan_overview.duration,
+      plan_overview.budget,
       plan_overview.plan_description,
       plan_overview.original_id,
       plan_overview.available,
       plan_overview.star_rating,
-      id
+      plan_overview.star_rating,
+      id,
     ],
     (err, res) => {
       if (err) {

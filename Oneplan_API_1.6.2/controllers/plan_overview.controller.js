@@ -3,31 +3,36 @@ const Plan_overview = require("../models/plan_overview.model.js");
 exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
-      message: "Content can not be empty."
+      message: "Content can not be empty.",
     });
   }
 
   const plan_overview = new Plan_overview({
     plan_title: req.body.plan_title,
     user_id: req.body.user_id,
-    city_id: req.body.city_id,
+	contributor: req.body.contributor,
     duration: req.body.duration,
+    budget: req.body.budget,
     plan_description: req.body.plan_description,
     original_id: req.body.original_id,
     available: req.body.available,
-    star_rating: req.body.star_rating
+    star_rating: req.body.star_rating,
   });
 
   Plan_overview.create(plan_overview, (err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the plan_overview."
+        message:
+          err.message ||
+          "Some error occurred while creating the plan_overview.",
       });
     else {
       Plan_overview.auto_tag_insert(data.id, (err, data2) => {
         if (err)
           res.status(500).send({
-            message: err.message || "Some error occurred while creating the plan_overview."
+            message:
+              err.message ||
+              "Some error occurred while creating the plan_overview.",
           });
         else res.send(data2);
       });
@@ -35,53 +40,26 @@ exports.create = (req, res) => {
   });
 };
 
-exports.findId = (req, res) => {
-  Plan_overview.findById(req.params.planId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_overview with plan_id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_overview with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
-};
+exports.update = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty.",
+    });
+  }
 
-exports.findUser = (req, res) => {
-  Plan_overview.findByUser(req.params.userId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_overview of user with user_id ${req.params.userId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_overview of user with user_id " + req.params.userId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
-exports.findCriteria = (req, res) => {
-  Plan_overview.findByCriteriaTag(
-    req.params.cityId,
-    req.params.start,
-    req.params.stop,
-    ('"' + req.params.style.replace(/,/g, '","') + '"').split(","),
-    async (err, data) => {
+  Plan_overview.updateById(
+    req.params.planId,
+    new Plan_overview(req.body),
+    (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found plan_overview in city with the current criteria.`
+            message: `Not found Plan_overview with id ${req.params.planId}.`,
           });
         } else {
           res.status(500).send({
-            message: "Error retrieving plan_overview in city with the current criteria"
+            message:
+              "Error updating plan_overview with plan_id " + req.params.planId,
           });
         }
       } else res.send(data);
@@ -89,53 +67,22 @@ exports.findCriteria = (req, res) => {
   );
 };
 
-exports.findAll = (req, res) => {
-  Plan_overview.getAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving plan_overview."
-      });
-    else res.send(data);
-  });
-};
-
-exports.update = (req, res) => {
-  if (!req.body) {
-    res.status(400).send({
-      message: "Content can not be empty."
-    });
-  }
-
-  Plan_overview.updateById(req.params.planId, new Plan_overview(req.body), (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found Plan_overview with id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error updating plan_overview with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
 exports.delete = (req, res) => {
   Plan_overview.remove(req.params.planId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan_overview with plan_id ${req.params.planId}.`
+          message: `Not found plan_overview with plan_id ${req.params.planId}.`,
         });
       } else {
         res.status(500).send({
-          message: "Could not delete plan_overview with plan_id " + req.params.planId
+          message:
+            "Could not delete plan_overview with plan_id " + req.params.planId,
         });
       }
     } else
       res.send({
-        message: `Plan_overview with plan_id ${req.params.planId} was deleted successfully!`
+        message: `Plan_overview with plan_id ${req.params.planId} was deleted successfully!`,
       });
   });
 };
@@ -145,19 +92,21 @@ exports.duplicate = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found plan_overview with plan_id ${req.params.planId}.`
+          message: `Not found plan_overview with plan_id ${req.params.planId}.`,
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving plan_overview with plan_id " + req.params.planId
+          message:
+            "Error retrieving plan_overview with plan_id " + req.params.planId,
         });
       }
     } else {
       const plan_overview = new Plan_overview({
         plan_title: data[0].plan_title,
         user_id: req.params.userId,
-        city_id: data[0].city_id,
+		contributor: req.params.contributor,
         duration: data[0].duration,
+        budget: data[0].budget,
         plan_description: data[0].plan_description,
         original_id: req.params.planId,
         available: data[0].available,
@@ -169,7 +118,7 @@ exports.duplicate = (req, res) => {
             message:
               err.message ||
               "Some error occurred while duplicating the plan_overview with plan_id " +
-                req.params.planId
+                req.params.planId,
           });
         else res.send(data2);
       });

@@ -21,38 +21,6 @@ exports.create = (req, res) => {
   });
 };
 
-exports.findPlanId = (req, res) => {
-  Plan_location.findByPlanId(req.params.planId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_location with plan_id ${req.params.planId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_location with plan_id " + req.params.planId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
-exports.findCityId = (req, res) => {
-  Plan_location.findByCityId(req.params.cityId, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found plan_location with city_id ${req.params.cityId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving plan_location with city_id " + req.params.cityId
-        });
-      }
-    } else res.send(data);
-  });
-};
-
 exports.duplicate = (req, res) => {
   Plan_location.findByPlanId(req.params.planId, (err, data) => {
     if (err) {
@@ -86,6 +54,33 @@ exports.duplicate = (req, res) => {
       res.send(array);
     }
   });
+};
+
+exports.update = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty.",
+    });
+  }
+
+  Plan_location.updateById(
+    req.params.planId,
+    new Plan_location(req.body),
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Plan_location with id ${req.params.planId}.`,
+          });
+        } else {
+          res.status(500).send({
+            message:
+              "Error updating plan_location with plan_id " + req.params.planId,
+          });
+        }
+      } else res.send(data);
+    }
+  );
 };
 
 exports.deletePlanId = (req, res) => {
