@@ -105,7 +105,7 @@ exports.updateOne = (req, res) => {
       message: "Content can not be empty."
     });
   }
-  Attraction.findByGoogleId(req.body.google_place_id, async (err, dummy) => {
+  Attraction.findByGoogleId(req.body.google_place_id, (err, dummy) => {
     if (err) {
       if (err.kind === "not_found") {
         const attraction = new Attraction({
@@ -123,23 +123,23 @@ exports.updateOne = (req, res) => {
         });
       }
     }
-  });
-  Plan_detail.updateByIdOne(
-    req.params.planId,
-    req.params.order,
-    new Plan_detail(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found plan_detail with plan_id  ${req.params.planId}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating plan_detail with plan_id  " + req.params.planId
-          });
-        }
-      } else res.send(data);
-    }
-  );
+	Plan_detail.updateByIdOne(
+		req.params.planId,
+		req.params.order,
+		new Plan_detail(req.body),
+		(err, data) => {
+		if (err) {
+			if (err.kind === "not_found") {
+			res.status(404).send({
+				message: `Not found plan_detail with plan_id  ${req.params.planId}.`
+			});
+			} else {
+			res.status(500).send({
+				message: "Error updating plan_detail with plan_id  " + req.params.planId
+			});
+			}
+		} else res.send(data);
+		}
+	);
+  }); 
 };
