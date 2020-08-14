@@ -7,7 +7,6 @@ const Plan_detail = function(plan_detail) {
   this.start_time = plan_detail.start_time;
   this.end_time = plan_detail.end_time;
   this.time_spend = plan_detail.time_spend;
-  this.attraction_id = plan_detail.attraction_id;
   this.google_place_id = plan_detail.google_place_id;
   this.description = plan_detail.description;
 };
@@ -79,7 +78,7 @@ Plan_detail.removePlanIdOne = (id, order, result) => {
 
 Plan_detail.updateByIdOne = (id, order, plan_detail, result) => {
   sql.query(
-    "UPDATE plan_detail SET plan_id = ?, day = ?, attraction_order = ?, start_time = ?, end_time = ?, time_spend = ?, attraction_id = ?, google_place_id = ?, description = ? WHERE plan_id = ? AND attraction_order = ?",
+    "UPDATE plan_detail SET plan_id = ?, day = ?, attraction_order = ?, start_time = ?, end_time = ?, time_spend = ?, google_place_id = ?, description = ? WHERE plan_id = ? AND attraction_order = ?",
     [
       plan_detail.plan_id,
       plan_detail.day,
@@ -87,7 +86,6 @@ Plan_detail.updateByIdOne = (id, order, plan_detail, result) => {
       plan_detail.start_time,
       plan_detail.end_time,
       plan_detail.time_spend,
-      plan_detail.attraction_id,
       plan_detail.google_place_id,
       plan_detail.description,
       id,

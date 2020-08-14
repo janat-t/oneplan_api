@@ -13,7 +13,6 @@ exports.create = (req, res) => {
     start_time: req.body.start_time,
     end_time: req.body.end_time,
     time_spend: req.body.time_spend,
-    attraction_id: req.body.attraction_id,
     google_place_id: req.body.google_place_id,
     description: req.body.description
   });
@@ -51,7 +50,6 @@ exports.duplicate = (req, res) => {
           start_time: data[i].start_time,
           end_time: data[i].end_time,
           time_spend: data[i].time_spend,
-          attraction_id: data[i].attraction_id,
           google_place_id: data[i].google_place_id,
           description: data[i].description
         });
