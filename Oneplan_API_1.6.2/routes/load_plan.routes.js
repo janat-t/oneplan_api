@@ -3,6 +3,7 @@ module.exports = app => {
 	app.get("/api/load_plan/search", load_plan.searchPlanCriteria, function(req, res) {
 	 var planId = req.query.planId;
 	 var userId = req.query.userId;
+	 var contributorId = req.query.contributorId
 	 var cityId = req.query.cityId;
 	 var start = req.query.start;
 	 var stop = req.query.stop;
