@@ -92,6 +92,7 @@ exports.loadFullOverview = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
+        res.send(data);
       } else {
         res.status(500).send({
           message: "Error retrieving plan.",
@@ -112,6 +113,7 @@ exports.loadFullLocation = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
+        res.send(data);
       } else {
         res.status(500).send({
           message: "Error retrieving plan.",
@@ -128,6 +130,7 @@ exports.loadFullTag = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
+        res.send(data);
       } else {
         res.status(500).send({
           message: "Error retrieving plan.",
@@ -142,6 +145,7 @@ exports.loadFullStartday = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
+        res.send(data);
       } else {
         res.status(500).send({
           message: "Error retrieving plan.",
@@ -162,6 +166,7 @@ exports.loadFullAttraction = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
+        res.send(data);
       } else {
         res.status(500).send({
           message: "Error retrieving plan.",
@@ -178,6 +183,7 @@ exports.loadFullReview = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
+        res.send(data);
       } else {
         res.status(500).send({
           message: "Error retrieving plan.",
