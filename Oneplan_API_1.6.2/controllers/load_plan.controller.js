@@ -16,6 +16,9 @@ exports.searchPlanCriteria = (req, res) => {
   if (req.query.userId) {
     order += ' user_id = "' + req.query.userId + '" AND';
   }
+  if (req.query.contributorId) {
+    order += ' contributor_id LIKE "%' + req.query.contributorId + '%" AND';
+  }
   if (req.query.budget) {
     order += " budget = " + req.query.budget + " AND";
   }
