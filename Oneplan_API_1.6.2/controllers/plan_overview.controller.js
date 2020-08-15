@@ -1,4 +1,5 @@
 const Plan_overview = require("../models/plan_overview.model.js");
+const Load_plan = require("../models/load_plan.model.js");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -88,7 +89,7 @@ exports.delete = (req, res) => {
 };
 
 exports.duplicate = (req, res) => {
-  Plan_overview.findById(req.params.planId, (err, data) => {
+  Load_plan.loadFullOverview(req.params.planId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

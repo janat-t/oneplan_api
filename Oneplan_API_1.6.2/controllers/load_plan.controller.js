@@ -88,10 +88,7 @@ exports.loadSimpleId = (req, res) => {
 };
 
 exports.loadFullOverview = (req, res) => {
-  var order =
-    "SELECT * FROM plan_overview WHERE plan_overview.plan_id = " +
-    req.query.planId;
-  Load_plan.execute(order, (err, data) => {
+  Load_plan.loadFullOverview(req.query.planId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
@@ -141,11 +138,7 @@ exports.loadFullTag = (req, res) => {
 };
 
 exports.loadFullStartday = (req, res) => {
-  var order =
-    "SELECT * FROM plan_startday WHERE plan_id = " +
-    req.query.planId +
-    " ORDER BY day";
-  Load_plan.execute(order, (err, data) => {
+  Load_plan.loadFullStartday(req.query.planId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         data=[];
