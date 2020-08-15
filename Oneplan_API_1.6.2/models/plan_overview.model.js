@@ -4,7 +4,7 @@ const Plan_overview = function (plan_overview) {
   this.plan_id = plan_overview.plan_id;
   this.plan_title = plan_overview.plan_title;
   this.user_id = plan_overview.user_id;
-  this.contributor = plan_overview.contributor;
+  this.contributor_id = plan_overview.contributor_id;
   this.duration = plan_overview.duration;
   this.budget = plan_overview.budget;
   this.plan_description = plan_overview.plan_description;
@@ -44,11 +44,11 @@ Plan_overview.auto_tag_insert = (id, result) => {
 
 Plan_overview.updateById = (id, plan_overview, result) => {
   sql.query(
-    "UPDATE plan_overview SET plan_title = ?, user_id = ?, contributor = ?, duration = ?, budget = ?, plan_description = ?, original_id = ?, available = ?, star_rating = ? WHERE plan_id = ?",
+    "UPDATE plan_overview SET plan_title = ?, user_id = ?, contributor_id = ?, duration = ?, budget = ?, plan_description = ?, original_id = ?, available = ?, star_rating = ? WHERE plan_id = ?",
     [
       plan_overview.plan_title,
       plan_overview.user_id,
-	  plan_overview.contributor,
+	  plan_overview.contributor_id,
       plan_overview.duration,
       plan_overview.budget,
       plan_overview.plan_description,

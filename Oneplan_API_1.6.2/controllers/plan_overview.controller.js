@@ -10,7 +10,7 @@ exports.create = (req, res) => {
   const plan_overview = new Plan_overview({
     plan_title: req.body.plan_title,
     user_id: req.body.user_id,
-	contributor: req.body.contributor,
+	contributor_id: req.body.contributor_id,
     duration: req.body.duration,
     budget: req.body.budget,
     plan_description: req.body.plan_description,
@@ -104,7 +104,7 @@ exports.duplicate = (req, res) => {
       const plan_overview = new Plan_overview({
         plan_title: data[0].plan_title,
         user_id: req.params.userId,
-		contributor: req.params.contributor,
+		contributor_id: req.params.contributor_id,
         duration: data[0].duration,
         budget: data[0].budget,
         plan_description: data[0].plan_description,
