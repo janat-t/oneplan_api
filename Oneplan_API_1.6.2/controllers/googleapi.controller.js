@@ -49,6 +49,9 @@ exports.findNearby = async (req, res) => {
     req.query.lng +
     "&radius=3000&key=" +
     API_key;
+  if (req.query.type) {
+    url += "&type=" + req.query.type;
+  }
   let error = null;
   await axios
     .get(url)
