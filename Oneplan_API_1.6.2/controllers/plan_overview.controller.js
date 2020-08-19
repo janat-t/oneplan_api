@@ -17,6 +17,8 @@ exports.create = (req, res) => {
     plan_description: req.body.plan_description,
     original_id: req.body.original_id,
     available: req.body.available,
+	viewed: req.body.viewed,
+	saved: req.body.saved,
     star_rating: req.body.star_rating,
   });
 
@@ -111,6 +113,8 @@ exports.duplicate = (req, res) => {
         plan_description: data[0].plan_description,
         original_id: req.params.planId,
         available: data[0].available,
+		viewed: req.params.viewed,
+		saved: req.params.saved,
         star_rating: data[0].star_rating
       });
       Plan_overview.create(plan_overview, (err, data2) => {

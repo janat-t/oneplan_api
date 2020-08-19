@@ -9,6 +9,8 @@ const Plan_overview = function (plan_overview) {
   this.budget = plan_overview.budget;
   this.plan_description = plan_overview.plan_description;
   this.original_id = plan_overview.original_id;
+  this.viewed = plan_overview.viewed;
+  this.saved = plan_overview.saved;
   this.available = plan_overview.available;
   this.star_rating = plan_overview.star_rating;
 };
@@ -66,7 +68,7 @@ Plan_overview.auto_tag_insert = (id, result) => {
 
 Plan_overview.updateById = (id, plan_overview, result) => {
   sql.query(
-    "UPDATE plan_overview SET plan_title = ?, user_id = ?, contributor_id = ?, duration = ?, budget = ?, plan_description = ?, original_id = ?, available = ?, star_rating = ? WHERE plan_id = ?",
+    "UPDATE plan_overview SET plan_title = ?, user_id = ?, contributor_id = ?, duration = ?, budget = ?, plan_description = ?, original_id = ?, available = ?, viewed = ?, saved = ?, star_rating = ? WHERE plan_id = ?",
     [
       plan_overview.plan_title,
       plan_overview.user_id,
@@ -76,6 +78,8 @@ Plan_overview.updateById = (id, plan_overview, result) => {
       plan_overview.plan_description,
       plan_overview.original_id,
       plan_overview.available,
+	  plan_overview.viewed,
+	  plan_overview.saved,
       plan_overview.star_rating,
       id,
     ],
