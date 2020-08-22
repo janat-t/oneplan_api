@@ -20,8 +20,6 @@ exports.uploadCover = (req, res) => {
     Expires: 120,
     ContentType: req.body.type
   };
-
-  let url = "";
   S3.getSignedUrl("putObject", params, (err, data) => {
     if (err) {
       console.log(err);
@@ -29,44 +27,6 @@ exports.uploadCover = (req, res) => {
     } else {
       console.log(data);
       res.send(data);
-    }
-  });
-};
-
-exports.uploadCoverImage = (req, res) => {
-  console.log("put", req.body);
-  var S3 = new aws.S3();
-
-  var params = {
-    Bucket: aws_config.Bucket,
-    Key: "" + req.headers.plan_id,
-    Expires: 60,
-    ContentType: req.headers.type
-  };
-
-  let url = "";
-  S3.getSignedUrl("putObject", params, async (err, data) => {
-    if (err) {
-      console.log(err);
-      res.status(404).send(err);
-    } else {
-      console.log(data);
-      url = data;
-      let options = {
-        headers: {
-          "Content-Type": req.headers.type
-        }
-      };
-      await axios
-        .put(url, req.image, options)
-        .then(result => {
-          console.log(result);
-          res.send(result);
-        })
-        .catch(error => {
-          console.log(error);
-          res.send(error.data);
-        });
     }
   });
 };

@@ -23,14 +23,12 @@ require("./routes/transport.routes.js")(app);
 require("./routes/load_plan.routes.js")(app);
 require("./routes/image.routes.js")(app);
 require("./routes/googleapi.routes.js")(app);
-require("./routes/ward.routes.js")(app);
 require("./routes/plan_location.routes.js")(app);
-require("./routes/attraction_tag.routes.js")(app);
 require("./routes/response.routes.js")(app);
 require("./routes/plan_tag.routes.js")(app);
 require("./routes/plan_review.routes.js")(app);
 require("./routes/plan_cover.routes.js")(app);
-require("./routes/attraction_recommended.routes.js")(app);
+require("./routes/plan_season.routes.js")(app);
 
 // set port, listen for requests
 

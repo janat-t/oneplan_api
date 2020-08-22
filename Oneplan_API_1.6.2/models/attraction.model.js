@@ -1,13 +1,7 @@
 const sql = require("./db.js");
 
 const Attraction = function(attraction) {
-  this.attraction_name = attraction.attraction_name;
   this.google_place_id = attraction.google_place_id;
-  this.attraction_name_thai = attraction.attraction_name_thai;
-  this.open_time = attraction.open_time;
-  this.close_time = attraction.close_time;
-  this.attraction_description = attraction.attraction_description;
-  this.ward_id = attraction.ward_id;
   this.attraction_link = attraction.attraction_link;
 };
 
@@ -21,24 +15,6 @@ Attraction.create = (newAttraction, result) => {
 
     console.log("created attraction: ", { id: res.insertId, ...newAttraction });
     result(null, { id: res.insertId, ...newAttraction });
-  });
-};
-
-Attraction.findById = (id, result) => {
-  sql.query(`SELECT * FROM attraction WHERE attraction_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found attraction: ", res);
-      result(null, res);
-      return;
-    }
-
-    result({ kind: "not_found" }, null);
   });
 };
 
@@ -60,71 +36,6 @@ Attraction.findByGoogleId = (id, result) => {
   });
 };
 
-Attraction.findByWard = (id, result) => {
-  sql.query(`SELECT * FROM attraction WHERE ward_id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found attraction: ", res);
-      result(null, res);
-      return;
-    }
-
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Attraction.findByCity = (id, result) => {
-  sql.query(
-    `SELECT * FROM attraction 
-  INNER JOIN ward ON attraction.ward_id = ward.ward_id 
-  INNER JOIN city ON ward.city_id = city.city_id 
-  WHERE city.city_id = ${id}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found attraction: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
-Attraction.findByStyle = (style, result) => {
-  sql.query(
-    `SELECT * FROM attraction 
-  INNER JOIN attraction_tag ON attraction.attraction_id = attraction_tag.attraction_id 
-  WHERE attraction_tag.attraction_type = "${style}"`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      if (res.length) {
-        console.log("found attraction: ", res);
-        result(null, res);
-        return;
-      }
-
-      result({ kind: "not_found" }, null);
-    }
-  );
-};
-
 Attraction.getAll = result => {
   sql.query("SELECT * FROM attraction", (err, res) => {
     if (err) {
@@ -140,15 +51,9 @@ Attraction.getAll = result => {
 
 Attraction.updateById = (id, attraction, result) => {
   sql.query(
-    "UPDATE attraction SET attraction_name = ?, google_place_id = ?, attraction_name_thai = ?, open_time = ?, close_time = ?, attraction_description = ?, ward_id = ?, attraction_link = ? WHERE attraction_id = ?",
+    "UPDATE attraction SET google_place_id = ?, attraction_link = ? WHERE google_place_id = ?",
     [
-      attraction.attraction_name,
       attraction.google_place_id,
-      attraction.attraction_name_thai,
-      attraction.open_time,
-      attraction.close_time,
-      attraction.attraction_description,
-      attraction.ward_id,
       attraction.attraction_link,
       id
     ],
@@ -172,7 +77,7 @@ Attraction.updateById = (id, attraction, result) => {
 };
 
 Attraction.remove = (id, result) => {
-  sql.query("DELETE FROM attraction WHERE attraction_id = ?", id, (err, res) => {
+  sql.query("DELETE FROM attraction WHERE google_place_id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

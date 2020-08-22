@@ -1,4 +1,5 @@
 const Plan_startday = require("../models/plan_startday.model.js");
+const Load_plan = require("../models/load_plan.model.js");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -23,7 +24,7 @@ exports.create = (req, res) => {
 };
 
 exports.duplicate = (req, res) => {
-  Plan_startday.findByPlanId(req.params.planId, (err, data) => {
+  Load_plan.loadFullStartday(req.params.planId, (err, data) => {
     if (err) {
       res.status(500).send({
         message: "Error retrieving plan_startday with plan_id " + req.params.planId
