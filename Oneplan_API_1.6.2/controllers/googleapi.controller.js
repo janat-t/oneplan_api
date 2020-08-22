@@ -17,6 +17,7 @@ exports.findId = async (req, res) => {
           google_place_id: req.params.placeId,
           attraction_name: result.data.result.name,
           attraction_type: result.data.result.types[0],
+          attraction_types: result.data.result.types,
           attraction_link: result.data.result.url,
           geometry: result.data.result.geometry,
           open_time: "",
@@ -47,10 +48,16 @@ exports.findNearby = async (req, res) => {
     req.query.lat +
     "," +
     req.query.lng +
-    "&radius=3000&key=" +
+    "&key=" +
     API_key;
+  if (req.query.radius) {
+    url += "&radius=" + req.query.radius;
+  } else {
+    url += "&radius=3000";
+  }
   if (req.query.type) {
     url += "&type=" + req.query.type;
+    console.log("type is " + req.query.type);
   }
   let error = null;
   await axios
