@@ -29,6 +29,7 @@ require("./routes/plan_tag.routes.js")(app);
 require("./routes/plan_review.routes.js")(app);
 require("./routes/plan_cover.routes.js")(app);
 require("./routes/plan_season.routes.js")(app);
+require("./routes/attraction_recommended.routes.js")(app);
 
 // set port, listen for requests
 
