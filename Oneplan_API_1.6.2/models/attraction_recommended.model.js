@@ -19,7 +19,7 @@ Attraction_recommended.create = (newAttraction_recommended, result) => {
 };
 
 Attraction_recommended.findByCityId = (id, result) => {
-  sql.query(`SELECT * FROM attraction_recommended WHERE city_id = "${id}"`, (err, res) => {
+  sql.query(`SELECT google_place_id FROM attraction_recommended WHERE city_id = "${id}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
