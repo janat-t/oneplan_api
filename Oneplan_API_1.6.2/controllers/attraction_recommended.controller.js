@@ -21,6 +21,16 @@ exports.create = (req, res) => {
   });
 };
 
+exports.findAll = (req, res) => {
+  Attraction_recommended.getAll((err, data) => {
+    if (err)
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving cities."
+      });
+    else res.send(data);
+  });
+};
+
 exports.findCityId = (req, res) => {
   Attraction_recommended.findByCityId(req.query.cityId, async (err, data) => {
     if (err) {
