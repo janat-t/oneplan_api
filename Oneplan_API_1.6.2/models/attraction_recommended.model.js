@@ -18,8 +18,21 @@ Attraction_recommended.create = (newAttraction_recommended, result) => {
   });
 };
 
+Attraction_recommended.getAll = result => {
+  sql.query("SELECT * FROM attraction_recommended ORDER BY city_id ASC", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("found attraction_recommended: ", res);
+    result(null, res);
+  });
+};
+
 Attraction_recommended.findByCityId = (id, result) => {
-  sql.query(`SELECT * FROM attraction_recommended WHERE city_id = "${id}"`, (err, res) => {
+  sql.query(`SELECT google_place_id FROM attraction_recommended WHERE city_id = "${id}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

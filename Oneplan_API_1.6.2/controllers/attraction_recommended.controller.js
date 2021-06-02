@@ -21,14 +21,24 @@ exports.create = (req, res) => {
   });
 };
 
+exports.findAll = (req, res) => {
+  Attraction_recommended.getAll((err, data) => {
+    if (err)
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving cities."
+      });
+    else res.send(data);
+  });
+};
+
 exports.findCityId = (req, res) => {
-  Attraction_recommended.findByCityId(req.params.cityId, async (err, data) => {
+  Attraction_recommended.findByCityId(req.query.cityId, async (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         googleapi.findId(req, res);
       } else {
         res.status(500).send({
-          message: "Error retrieving the attraction_recommended with google_place_id " + req.params.attraction_recommendedId
+          message: "Error retrieving the attraction_recommended with google_place_id " + req.query.attraction_recommendedId
         });
       }
     } else res.send(data);
