@@ -1,0 +1,8 @@
+#!/bin/zsh
+while true; do
+    echo "Start Server" >> runtimelog.txt
+    echo | date >> runtimelog.txt
+    node server.js
+    echo "Server Stopped" >> runtimelog.txt
+    echo | date >> runtimelog.txt
+done
