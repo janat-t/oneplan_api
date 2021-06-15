@@ -31,4 +31,7 @@ module.exports = app => {
 	app.get("/api/load_plan/full/review", load_plan.loadFullReview, function(req, res) {
 	 var planId = req.query.planId;
     });
+	app.get("/api/load_plan/full/transport", load_plan.loadFullTransport, function(req, res) {
+	 var planId = req.query.planId;
+	});
 };

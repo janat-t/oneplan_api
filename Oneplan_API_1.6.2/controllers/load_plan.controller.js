@@ -192,3 +192,18 @@ exports.loadFullReview = (req, res) => {
     } else res.send(data);
   });
 };
+
+exports.loadFullTransport = (req, res) => {
+  Load_plan.loadFullTransport(req.query.planId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        data=[];
+        res.send(data);
+      } else {
+        res.status(500).send({
+          message: "Error retrieving plan.",
+        });
+      }
+    } else res.send(data);
+  });
+};

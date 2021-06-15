@@ -61,4 +61,24 @@ Load_plan.loadFullStartday = (id, result) => {
   );
 };
 
+Load_plan.loadFullTransport = (id, result) => {
+  var order = "SELECT * FROM transport WHERE plan_id = " + id  +
+  " ORDER BY day, trans_order";
+  sql.query(order,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        console.log("found plan: ", res);
+        result(null, res);
+        return;
+      }
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
 module.exports = Load_plan;
